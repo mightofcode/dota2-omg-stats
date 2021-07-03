@@ -17,13 +17,13 @@ const Wrapper = styled.div`
 `;
 
 const Item = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   line-height: 100%;
   color: #646c7a;
 `;
 
 const ItemSortable = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   line-height: 100%;
   color: #646c7a;
   cursor: pointer;

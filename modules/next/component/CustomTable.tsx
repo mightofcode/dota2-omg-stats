@@ -10,19 +10,20 @@ const StyledTable = styled(Table)`
     line-height: 1rem !important;
     color: #696d73 !important;
     background-color: #ffffff !important;
-    padding: 0.75rem 1rem !important;
-    border-bottom: none !important;
+    padding: 5px 10px !important;
+    border-bottom: 1px solid #eaeaea !important;
   }
-  :not(:last-of-type(tr)) {
-    td {
-      font-size: 0.875rem !important;
-      font-weight: 400 !important;
-      line-height: 1.375rem !important;
-      color: #34373c !important;
-      padding: 0.75rem 1rem !important;
-      border-top: none !important;
-      border-bottom: 1px solid #f3f3f3;
-    }
+  thead {
+  }
+  tr {
+    font-size: 14px;
+    line-height: 100%;
+    color: #646c7a;
+    border-top: none !important;
+  }
+  td {
+    padding: 5px 10px !important;
+    min-width: 80px;
   }
 `;
 

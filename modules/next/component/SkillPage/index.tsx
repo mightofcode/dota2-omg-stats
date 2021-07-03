@@ -31,6 +31,11 @@ const Title = styled.div`
   color: #484848;
 `;
 
+const SkillIcon = styled.img`
+  border-radius: 2px;
+  width: 30px;
+`;
+
 const TableContainer = styled.div``;
 
 export default function SkillPage({}) {
@@ -67,8 +72,30 @@ export default function SkillPage({}) {
           </Table.Header>
           <Table.Body>
             <Table.Row>
+              <Table.Cell style={{ "min-width": "80px" }}>1</Table.Cell>
+              <Table.Cell>
+                <SkillIcon src={"/earthshaker_enchant_totem_25.png"} />
+              </Table.Cell>
+              <Table.Cell>图腾暴击</Table.Cell>
+              <Table.Cell>earthshaker_enchant_totem</Table.Cell>
+              <Table.Cell>50.00%</Table.Cell>
+              <Table.Cell>10000</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>1</Table.Cell>
+              <Table.Cell>
+                <SkillIcon src={"/earthshaker_enchant_totem_25.png"} />
+              </Table.Cell>
               <Table.Cell>1</Table.Cell>
               <Table.Cell>1</Table.Cell>
+              <Table.Cell>1</Table.Cell>
+              <Table.Cell>1</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>1</Table.Cell>
+              <Table.Cell>
+                <SkillIcon src={"/earthshaker_enchant_totem_25.png"} />
+              </Table.Cell>
               <Table.Cell>1</Table.Cell>
               <Table.Cell>1</Table.Cell>
               <Table.Cell>1</Table.Cell>

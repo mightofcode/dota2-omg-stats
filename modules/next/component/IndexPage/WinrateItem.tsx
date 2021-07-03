@@ -31,7 +31,7 @@ export default function WinrateItem({}) {
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <ImgItem src={"/earthshaker_enchant_totem 25.png"} />
+      <ImgItem src={"/earthshaker_enchant_totem_25.png"} />
       <TextItem>50.00%</TextItem>
     </Wrapper>
   );
