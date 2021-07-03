@@ -11,26 +11,6 @@ import { Server } from "socket.io";
 
 dotenv.config();
 
-const mongoUri = process.env.MONGODB_URI;
-
-if (!mongoUri) {
-  console.error("MONGODB_URI is null", chalk.red("✗"));
-  process.exit();
-}
-console.log("connect to ", mongoUri);
-mongoose.connect(mongoUri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-});
-mongoose.connection.on("error", () => {
-  console.error(
-    "%s MongoDB connection error. Please make sure MongoDB is running.",
-    chalk.red("✗")
-  );
-  process.exit();
-});
-
 const app = new Koa();
 app.use(cors({ credentials: true }));
 app.use(logger());
@@ -61,7 +41,7 @@ const io = new Server(server, {
   },
 });
 
-const port = process.env.PORT || 5100;
+const port = process.env.PORT || 5201;
 
 server.listen(port, () =>
   console.log(`✅  The server is running at http://localhost:${port}/`)

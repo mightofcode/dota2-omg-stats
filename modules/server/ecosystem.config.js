@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "nextjs-scaffold",
+      name: "loveomg-server",
       script: "dist/index.js",
       args: "",
       log_date_format: "YYYY-MM-DD HH:mm Z",

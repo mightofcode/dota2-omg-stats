@@ -18,7 +18,7 @@ export default withLoginUserRedux(() => {
 
   return (
     <>
-      <PageHead title="nextjs-scaffold" />
+      <PageHead title="LoveOMG" />
       <Layout>
         <Container>
           <NotFound />
