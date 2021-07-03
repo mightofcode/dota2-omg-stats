@@ -52,10 +52,10 @@ export default function Header({}) {
     <Wrapper>
       <Divider width={"16px"} />
       <Title href={"/"}>LoveOMG</Title>
-      <NavLinkDirect>首页</NavLinkDirect>
+      <NavLinkDirect href={"/"}>首页</NavLinkDirect>
       <NavLink text={"技能"} />
       <NavLink text={"英雄"} />
-      <NavLinkDirect>统计</NavLinkDirect>
+      <NavLinkDirect href={"/stats"}>统计</NavLinkDirect>
     </Wrapper>
   );
 }

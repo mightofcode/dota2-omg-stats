@@ -34,9 +34,8 @@ export default function NavLinkMenu({}) {
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <Item>技能胜率</Item>
-      <Item>技能胜率</Item>
-      <Item>技能胜率</Item>
+      <Item>技能</Item>
+      <Item>英雄</Item>
     </Wrapper>
   );
 }
