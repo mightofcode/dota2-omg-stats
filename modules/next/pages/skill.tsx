@@ -7,6 +7,7 @@ import { postApi } from "@/services/nextApi";
 import Layout from "@/component/Layout";
 import Container from "@/component/Container";
 import IndexPage from "@/component/IndexPage";
+import SkillPage from "@/component/SkillPage";
 
 const Wrapper = styled.div``;
 
@@ -19,7 +20,7 @@ export default withLoginUserRedux(({}) => {
       <PageHead />
       <Layout>
         <Container>
-          <IndexPage />
+          <SkillPage />
         </Container>
       </Layout>
     </>
