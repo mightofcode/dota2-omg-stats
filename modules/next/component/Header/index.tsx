@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import * as React from "react";
+import Divider from "@/component/util/divider";
+import NavLink from "@/component/Header/NavLink";
 
 const Wrapper = styled.div`
   height: 50px;
@@ -10,26 +12,50 @@ const Wrapper = styled.div`
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   @media screen and (max-width: 865px) {
   }
-  box-shadow: 0px 0px 20px -20px rgba(0, 0, 0, 0.52);
+  > :not(:first-child) {
+    margin-left: 20px;
+  }
 `;
 
-const Item = styled.div`
-  flex: 1 1 100px;
+const Title = styled.a`
+  font-style: normal;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 100%;
+  color: #2cb3ff;
+  :hover {
+    text-decoration: none;
+    color: #2cb3ff;
+  }
+`;
+const NavLinkDirect = styled.a`
+  cursor: pointer;
+  :hover {
+    text-decoration: underline;
+  }
+  font-size: 18px;
+  line-height: 100%;
+  color: #646c7a;
 `;
 
 export default function Header({}) {
-    const router = useRouter();
-    useEffect(() => {
-        return () => {};
-    });
-    return (
-        <Wrapper>
-            <a href={"/"}>首页</a>
-        </Wrapper>
-    );
+  const router = useRouter();
+  useEffect(() => {
+    return () => {};
+  });
+  return (
+    <Wrapper>
+      <Divider width={"16px"} />
+      <Title href={"/"}>LoveOMG</Title>
+      <NavLinkDirect>首页</NavLinkDirect>
+      <NavLink text={"技能"} />
+      <NavLink text={"英雄"} />
+      <NavLinkDirect>统计</NavLinkDirect>
+    </Wrapper>
+  );
 }

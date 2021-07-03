@@ -12,14 +12,14 @@ const Wrapper = styled.div``;
 
 const FlexWrapper = styled.div``;
 
-export default withLoginUserRedux(({ posts, tabs, tab, hotPosts }) => {
+export default withLoginUserRedux(({}) => {
   const router = useRouter();
   return (
     <>
       <PageHead />
       <Layout>
         <Container>
-          <IndexPage posts={posts} tabs={tabs} tab={tab} hotPosts={hotPosts} />
+          <IndexPage />
         </Container>
       </Layout>
     </>

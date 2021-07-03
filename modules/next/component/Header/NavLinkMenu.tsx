@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import * as React from "react";
-import WinrateLine from "@/component/IndexPage/WinrateLine";
 
 const Wrapper = styled.div`
   display: flex;
@@ -15,35 +14,29 @@ const Wrapper = styled.div`
   > :not(:first-child) {
     margin-top: 10px;
   }
-  width: 100%;
-  padding: 46px 131px;
+
+  background: #ffffff;
+  border-radius: 3px;
+  padding: 12px 16px;
+  box-shadow: 0px 2px 4px 0px #00000040;
+  position: absolute;
+  top: 30px;
+  left: -20px;
+  z-index: 2;
 `;
 
-const Item = styled.div`
-  flex: 1 1 100px;
-`;
-const Title = styled.div`
-  font-weight: bold;
-  font-size: 24px;
-  line-height: 150%;
-  /* identical to box height, or 24px */
-
-  color: #484848;
+const Item = styled.a`
+  white-space: nowrap;
 `;
 
-export default function IndexPage({}) {
+export default function NavLinkMenu({}) {
   const router = useRouter();
-
   useEffect(() => {}, []);
-
   return (
     <Wrapper>
-      <Title>技能</Title>
-      <WinrateLine></WinrateLine>
-      <WinrateLine></WinrateLine>
-      <Title>英雄</Title>
-      <WinrateLine></WinrateLine>
-      <WinrateLine></WinrateLine>
+      <Item>技能胜率</Item>
+      <Item>技能胜率</Item>
+      <Item>技能胜率</Item>
     </Wrapper>
   );
 }

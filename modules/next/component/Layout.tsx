@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #e2e2e2;
+  background-color: #fff;
 `;
 
 const FlexGrow = styled.div`
@@ -16,13 +16,12 @@ const FlexGrow = styled.div`
   flex-grow: 1;
 `;
 
-
 export default function Layout({ children }) {
   return (
     <Wrapper>
-        <Header />
+      <Header />
       <FlexGrow>{children}</FlexGrow>
-        <Footer />
+      <Footer />
     </Wrapper>
   );
 }
