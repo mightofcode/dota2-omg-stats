@@ -5,8 +5,6 @@ import logger from "koa-logger";
 import helmet from "koa-helmet";
 import cors from "@koa/cors";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
-import chalk from "chalk";
 import { Server } from "socket.io";
 
 dotenv.config();
@@ -29,7 +27,7 @@ app.use(async (ctx, next) => {
   }
 });
 
-import routes from "./routes";
+import routes from "./web/routes";
 
 routes(app);
 

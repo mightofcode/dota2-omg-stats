@@ -8,9 +8,7 @@ router.all("/test", async function (ctx: Context) {
   };
 });
 
-const featureRouters = [
-  router,
-];
+const featureRouters = [router];
 
 export default (app: Koa) => {
   for (const router of featureRouters) {
