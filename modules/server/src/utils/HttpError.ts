@@ -1,4 +1,4 @@
-import { KeyValue } from "./util";
+import { KeyValue } from "./utils";
 
 export type StructureErrorMessage = KeyValue<string[]>;
 

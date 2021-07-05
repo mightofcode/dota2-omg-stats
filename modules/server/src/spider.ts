@@ -77,6 +77,7 @@ const main = async () => {
     if (matchs.length == 0) {
       console.log("sleep");
       await sleep(10000);
+      continue;
     }
     matchs.forEach((v: any) => {
       if (v?.game_mode == 18) {
