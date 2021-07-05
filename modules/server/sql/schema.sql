@@ -15,7 +15,7 @@ CREATE TABLE "match" (
 "match_id"  INTEGER PRIMARY KEY NOT NULL,
 "match_time"  INTEGER,
 "match_seq"  INTEGER,
-PRIMARY KEY ("id")
+PRIMARY KEY ("match_id")
 );
 
 CREATE UNIQUE INDEX "idx_id"
