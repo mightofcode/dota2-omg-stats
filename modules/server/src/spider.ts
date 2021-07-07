@@ -8,15 +8,9 @@ const util = require("util");
 
 dotenv.config();
 
+import { dbRun, dbAll, dbGet } from "./utils/db";
+
 console.log("start spider");
-
-var sqlite3 = require("sqlite3").verbose();
-
-var db = new sqlite3.Database("./dbData/sqlite3.db");
-
-var dbRun = util.promisify(db.run.bind(db));
-var dbGet = util.promisify(db.get.bind(db));
-var dbAll = util.promisify(db.all.bind(db));
 
 const getLastMatchSeq = async () => {
   let res = +(process?.env?.START_MATCH_SEQ || 0);

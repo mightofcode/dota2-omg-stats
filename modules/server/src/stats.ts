@@ -8,6 +8,7 @@ import dotaSchinese from "../data/dota_schinese.json";
 import abilitiesSchinese from "../data/abilities_schinese.json";
 import npcAbilities from "../data/npc_abilities.json";
 import npcHeroes from "../data/npc_heroes.json";
+import { dbRun, dbAll, dbGet } from "./utils/db";
 
 var fs = require("fs");
 const util = require("util");
@@ -15,14 +16,6 @@ const util = require("util");
 dotenv.config();
 
 console.log("start stats");
-
-const sqlite3 = require("sqlite3").verbose();
-
-const db = new sqlite3.Database("./dbData/sqlite3.db");
-
-const dbRun = util.promisify(db.run.bind(db));
-const dbGet = util.promisify(db.get.bind(db));
-const dbAll = util.promisify(db.all.bind(db));
 
 interface Hero {
   id: number;
@@ -206,6 +199,7 @@ const saveToDb = async () => {
   for (const id of Object.keys(herosIdMap)) {
     const hero = herosIdMap[+id];
     if (hero) {
+      console.log("save hero ", id);
       await dbRun(`delete from hero_winrate where id=${id} `);
       await dbRun(
         `insert into hero_winrate (id,name,name_en,name_cn,match_count,win_count,winrate) values ` +
@@ -216,6 +210,7 @@ const saveToDb = async () => {
   for (const id of Object.keys(abilitiesIdMap)) {
     const ability = abilitiesIdMap[+id];
     if (ability) {
+      console.log("save ability ", id);
       await dbRun(`delete from ability_winrate where id=${id} `);
       await dbRun(
         `insert into ability_winrate (id,name,name_en,name_cn,match_count,win_count,winrate) values ` +
