@@ -8,7 +8,9 @@
     "build": "tsc && yarn copy",
     "copy": "ls",
     "initDb": "sqlite3 dbData/sqlite3.db < sql/schema.sql",
-    "deploy": "yarn build && pm2 start ecosystem.config.js --only loveomg-spider"
+    "deploy-spider": "yarn build && pm2 start ecosystem.config.js --only loveomg-spider",
+    "deploy-stats": "yarn build && pm2 start ecosystem.config.js --only loveomg-stats",
+    "deploy-servere": "yarn build && pm2 start ecosystem.config.js --only loveomg-server"
   },
   "author": "",
   "license": "ISC",
