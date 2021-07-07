@@ -13,21 +13,21 @@ const Wrapper = styled.div`
   @media screen and (max-width: 865px) {
   }
   > :not(:first-child) {
-    margin-left: 10px;
   }
+  flex-wrap: wrap;
 `;
 
 const Item = styled.div``;
 
-export default function WinrateLine({}) {
+export default function WinrateLine({ winrates }) {
   const router = useRouter();
+
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <WinrateItem />
-      <WinrateItem />
-      <WinrateItem />
-      <WinrateItem />
+      {(winrates || []).map((item) => (
+        <WinrateItem winrate={item} />
+      ))}
     </Wrapper>
   );
 }

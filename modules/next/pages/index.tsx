@@ -12,14 +12,17 @@ const Wrapper = styled.div``;
 
 const FlexWrapper = styled.div``;
 
-export default withLoginUserRedux(({}) => {
+export default withLoginUserRedux(({ heroWinrates, abilityWinrates }) => {
   const router = useRouter();
   return (
     <>
       <PageHead />
       <Layout>
         <Container>
-          <IndexPage />
+          <IndexPage
+            heroWinrates={heroWinrates}
+            abilityWinrates={abilityWinrates}
+          />
         </Container>
       </Layout>
     </>
@@ -27,7 +30,12 @@ export default withLoginUserRedux(({}) => {
 });
 
 export const getServerSideProps = withLoginUser(async (context) => {
+  const heroWinrates = await postApi(`api/hero`, {});
+  const abilityWinrates = await postApi(`api/ability`, {});
   return {
-    props: {},
+    props: {
+      heroWinrates: heroWinrates?.result?.winrates,
+      abilityWinrates: abilityWinrates?.result?.winrates,
+    },
   };
 });

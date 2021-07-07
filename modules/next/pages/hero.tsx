@@ -7,19 +7,20 @@ import { postApi } from "@/services/nextApi";
 import Layout from "@/component/Layout";
 import Container from "@/component/Container";
 import IndexPage from "@/component/IndexPage";
+import HeroPage from "@/component/HeroPage";
 
 const Wrapper = styled.div``;
 
 const FlexWrapper = styled.div``;
 
-export default withLoginUserRedux(({}) => {
+export default withLoginUserRedux(({ winrates }) => {
   const router = useRouter();
   return (
     <>
       <PageHead />
       <Layout>
         <Container>
-          <IndexPage />
+          <HeroPage winrates={winrates} />
         </Container>
       </Layout>
     </>
@@ -27,7 +28,12 @@ export default withLoginUserRedux(({}) => {
 });
 
 export const getServerSideProps = withLoginUser(async (context) => {
+  const heroWinrates = await postApi(`api/hero`, {});
+
+  //console.log(abilityWinrates?.result?.winrates);
   return {
-    props: {},
+    props: {
+      winrates: heroWinrates?.result?.winrates,
+    },
   };
 });

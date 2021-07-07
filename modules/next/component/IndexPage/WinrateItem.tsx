@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   }
   > :not(:first-child) {
   }
+  padding: 0px 5px;
 `;
 
 const ImgItem = styled.img`
@@ -26,13 +27,14 @@ const TextItem = styled.div`
 
   color: #646c7a;
 `;
-export default function WinrateItem({}) {
+export default function WinrateItem({ winrate }) {
   const router = useRouter();
   useEffect(() => {}, []);
+  const text = (winrate?.winrate || 0.0).toFixed(2);
   return (
     <Wrapper>
       <ImgItem src={"/earthshaker_enchant_totem_25.png"} />
-      <TextItem>50.00%</TextItem>
+      <TextItem>{text}</TextItem>
     </Wrapper>
   );
 }

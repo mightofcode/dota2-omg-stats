@@ -34,8 +34,8 @@ export default function NavLinkMenu({}) {
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <Item>技能</Item>
-      <Item>英雄</Item>
+      <Item href={"/skill"}>技能</Item>
+      <Item href={"/hero"}>英雄</Item>
     </Wrapper>
   );
 }

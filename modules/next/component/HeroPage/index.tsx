@@ -38,7 +38,7 @@ const SkillIcon = styled.img`
 
 const TableContainer = styled.div``;
 
-export default function SkillPage({ winrates }) {
+export default function HeroPage({ winrates }) {
   const router = useRouter();
 
   useEffect(() => {

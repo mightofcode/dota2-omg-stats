@@ -29,7 +29,7 @@ const Title = styled.div`
   color: #484848;
 `;
 
-export default function IndexPage({}) {
+export default function IndexPage({ heroWinrates, abilityWinrates }) {
   const router = useRouter();
 
   useEffect(() => {}, []);
@@ -37,11 +37,9 @@ export default function IndexPage({}) {
   return (
     <Wrapper>
       <Title>技能</Title>
-      <WinrateLine></WinrateLine>
-      <WinrateLine></WinrateLine>
+      <WinrateLine winrates={abilityWinrates}></WinrateLine>
       <Title>英雄</Title>
-      <WinrateLine></WinrateLine>
-      <WinrateLine></WinrateLine>
+      <WinrateLine winrates={heroWinrates}></WinrateLine>
     </Wrapper>
   );
 }
