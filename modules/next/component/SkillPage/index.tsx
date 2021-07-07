@@ -72,7 +72,7 @@ export default function SkillPage({}) {
           </Table.Header>
           <Table.Body>
             <Table.Row>
-              <Table.Cell style={{ "min-width": "80px" }}>1</Table.Cell>
+              <Table.Cell style={{ minWidth: "80px" }}>1</Table.Cell>
               <Table.Cell>
                 <SkillIcon src={"/earthshaker_enchant_totem_25.png"} />
               </Table.Cell>
