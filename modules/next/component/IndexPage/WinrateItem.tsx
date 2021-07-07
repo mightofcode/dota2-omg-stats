@@ -13,12 +13,17 @@ const Wrapper = styled.div`
   }
   > :not(:first-child) {
   }
-  padding: 0px 5px;
+  padding: 2px 5px;
 `;
 
 const ImgItem = styled.img`
   border-radius: 2px;
-  width: 48px;
+  width: 60px;
+`;
+
+const ImgItemHero = styled.img`
+  border-radius: 2px;
+  width: 80px;
 `;
 const TextItem = styled.div`
   font-size: 12px;
@@ -27,13 +32,21 @@ const TextItem = styled.div`
 
   color: #646c7a;
 `;
-export default function WinrateItem({ winrate }) {
+export default function WinrateItem({ winrate, isHero }) {
   const router = useRouter();
   useEffect(() => {}, []);
   const text = (winrate?.winrate || 0.0).toFixed(2);
+  let img = "";
+  if (isHero) {
+    img = `https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/heros/${winrate.id}.png`;
+  } else {
+    img = `https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/skills/${winrate.id}.png`;
+  }
+
   return (
     <Wrapper>
-      <ImgItem src={"/earthshaker_enchant_totem_25.png"} />
+      {isHero ? <ImgItemHero src={img} /> : <ImgItem src={img} />}
+
       <TextItem>{text}</TextItem>
     </Wrapper>
   );

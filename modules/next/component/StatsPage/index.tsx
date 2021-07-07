@@ -41,15 +41,23 @@ const Title = styled.div`
   margin-bottom: 20px;
 `;
 
-export default function StatsPage({}) {
+export default function StatsPage({ stats }) {
   const router = useRouter();
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(stats);
+  }, []);
+
+  const startDate = new Date(stats?.first?.match_time * 1000);
+  const endDate = new Date(stats?.last?.match_time * 1000);
+  console.log(startDate, endDate);
   return (
     <Wrapper>
       <Title>统计</Title>
       <Item>
-        总场次<TextBold>12100</TextBold>场
-        <TextLight>（2021-01-01至2022-02-02）</TextLight>
+        总场次<TextBold>{stats?.count}</TextBold>场
+        <TextLight>
+          （{startDate.toLocaleDateString()}至{endDate.toLocaleDateString()}）
+        </TextLight>
       </Item>
       <Item>
         本站统计最近<TextBold>十天</TextBold>的数据

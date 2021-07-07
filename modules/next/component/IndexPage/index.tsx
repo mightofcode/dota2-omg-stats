@@ -37,9 +37,9 @@ export default function IndexPage({ heroWinrates, abilityWinrates }) {
   return (
     <Wrapper>
       <Title>技能</Title>
-      <WinrateLine winrates={abilityWinrates}></WinrateLine>
+      <WinrateLine winrates={abilityWinrates} isHero={false}></WinrateLine>
       <Title>英雄</Title>
-      <WinrateLine winrates={heroWinrates}></WinrateLine>
+      <WinrateLine winrates={heroWinrates} isHero={true}></WinrateLine>
     </Wrapper>
   );
 }

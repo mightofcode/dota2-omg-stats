@@ -33,7 +33,7 @@ const Title = styled.div`
 
 const SkillIcon = styled.img`
   border-radius: 2px;
-  width: 30px;
+  width: 25%;
 `;
 
 const TableContainer = styled.div``;
@@ -79,7 +79,9 @@ export default function SkillPage({ winrates }) {
                   {index + 1}
                 </Table.Cell>
                 <Table.Cell>
-                  <SkillIcon src={"/earthshaker_enchant_totem_25.png"} />
+                  <SkillIcon
+                    src={`https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/skills/${item.id}.png`}
+                  />
                 </Table.Cell>
                 <Table.Cell>{item.name_cn}</Table.Cell>
                 <Table.Cell>{item.name}</Table.Cell>

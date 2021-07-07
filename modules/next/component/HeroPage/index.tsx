@@ -33,7 +33,7 @@ const Title = styled.div`
 
 const SkillIcon = styled.img`
   border-radius: 2px;
-  width: 30px;
+  width: 50%;
 `;
 
 const TableContainer = styled.div``;
@@ -47,7 +47,7 @@ export default function HeroPage({ winrates }) {
 
   return (
     <Wrapper>
-      <Title>技能胜率</Title>
+      <Title>英雄胜率</Title>
       <TableContainer>
         <CustomTable>
           <Table.Header>
@@ -56,7 +56,7 @@ export default function HeroPage({ winrates }) {
                 <TableHead text={"#"} />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableHead text={"技能"} />
+                <TableHead text={"英雄"} />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <TableHead text={"NAME-CN"} />
@@ -79,7 +79,9 @@ export default function HeroPage({ winrates }) {
                   {index + 1}
                 </Table.Cell>
                 <Table.Cell>
-                  <SkillIcon src={"/earthshaker_enchant_totem_25.png"} />
+                  <SkillIcon
+                    src={`https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/heros/${item.id}.png`}
+                  />
                 </Table.Cell>
                 <Table.Cell>{item.name_cn}</Table.Cell>
                 <Table.Cell>{item.name}</Table.Cell>

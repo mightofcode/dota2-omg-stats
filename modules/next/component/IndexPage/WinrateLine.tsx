@@ -19,14 +19,14 @@ const Wrapper = styled.div`
 
 const Item = styled.div``;
 
-export default function WinrateLine({ winrates }) {
+export default function WinrateLine({ winrates, isHero }) {
   const router = useRouter();
 
   useEffect(() => {}, []);
   return (
     <Wrapper>
       {(winrates || []).map((item) => (
-        <WinrateItem winrate={item} />
+        <WinrateItem winrate={item} isHero={isHero} />
       ))}
     </Wrapper>
   );

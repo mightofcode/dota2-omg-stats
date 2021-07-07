@@ -13,14 +13,14 @@ const Wrapper = styled.div``;
 
 const FlexWrapper = styled.div``;
 
-export default withLoginUserRedux(({}) => {
+export default withLoginUserRedux(({ stats }) => {
   const router = useRouter();
   return (
     <>
       <PageHead />
       <Layout>
         <Container>
-          <StatsPage />
+          <StatsPage stats={stats} />
         </Container>
       </Layout>
     </>
@@ -28,7 +28,9 @@ export default withLoginUserRedux(({}) => {
 });
 
 export const getServerSideProps = withLoginUser(async (context) => {
+  const stats = await postApi(`api/stats`, {});
+
   return {
-    props: {},
+    props: { stats: stats?.result },
   };
 });
