@@ -16,13 +16,13 @@ dotenv.config();
 
 console.log("start stats");
 
-var sqlite3 = require("sqlite3").verbose();
+const sqlite3 = require("sqlite3").verbose();
 
-var db = new sqlite3.Database("./dbData/sqlite3.db");
+const db = new sqlite3.Database("./dbData/sqlite3.db");
 
-var dbRun = util.promisify(db.run.bind(db));
-var dbGet = util.promisify(db.get.bind(db));
-var dbAll = util.promisify(db.all.bind(db));
+const dbRun = util.promisify(db.run.bind(db));
+const dbGet = util.promisify(db.get.bind(db));
+const dbAll = util.promisify(db.all.bind(db));
 
 interface Hero {
   id: number;
@@ -63,7 +63,7 @@ const collectHeroMetaInfo = () => {
   console.log("collectMetaInfo");
   const heros: any = npcHeroes.DOTAHeroes;
   for (const k in heros) {
-    let v = heros[k];
+    const v = heros[k];
     if (k.startsWith("npc_dota_hero") && k != "npc_dota_hero_base") {
       //
       const abilityList = [];
@@ -106,11 +106,11 @@ const collectAbilityMetaInfo = () => {
   console.log("collectMetaInfo");
   const abilities: any = npcAbilities.DOTAAbilities;
   for (const k in abilities) {
-    let v = abilities[k];
+    const v = abilities[k];
     if (activeAbilityMap[k]) {
       //
 
-      let ability: Ability = {
+      const ability: Ability = {
         id: v.ID,
         name: k,
         name_en: "",
@@ -127,7 +127,74 @@ const collectAbilityMetaInfo = () => {
     `collectAbilityMetaInfo count ${Object.keys(abilitiesNameMap).length}`
   );
 };
-const parseMatch = () => {
+const handleMatch = async (match: any) => {
+  console.log(match.match_id);
+  const matchData = JSON.parse(match.data);
+  const radiant_win = matchData.radiant_win == 1;
+  const players = matchData.players || [];
+  const heros: any = {};
+  const abilities: any = {};
+
+  const isRadiant = (slot: number) => {
+    return slot < 128;
+  };
+
+  players.forEach((v: any) => {
+    const radiant = isRadiant(v.player_slot);
+    let win = false;
+    if (radiant) {
+      win = radiant_win;
+    } else {
+      win = !radiant_win;
+    }
+    heros[v.hero_id] = win;
+    const abilityUpgrade = v.ability_upgrades || [];
+    abilityUpgrade.forEach((ability: any) => {
+      abilities[ability.ability] = win;
+    });
+  });
+  //console.log(heros,abilities);
+  //
+  for (const key of Object.keys(heros)) {
+    const hero = herosIdMap[+key];
+    if (hero) {
+      hero.matchCount += 1;
+      if (heros[key]) {
+        hero.winCount += 1;
+      }
+      if (hero.matchCount >= 1) {
+        hero.winrate = hero.winCount / hero.matchCount;
+      }
+    }
+  }
+  for (const key of Object.keys(abilities)) {
+    const ability = abilitiesIdMap[+key];
+    if (ability) {
+      ability.matchCount += 1;
+      if (abilities[key]) {
+        ability.winCount += 1;
+      }
+      if (ability.matchCount >= 1) {
+        ability.winrate = ability.winCount / ability.matchCount;
+      }
+    }
+  }
+};
+const parseMatch = async () => {
+  let lastId = 0;
+  while (true) {
+    const matchs = await dbAll(
+      `select * from match where match_id>${lastId} order by match_id limit 100`
+    );
+    console.log("matchs ", matchs.length);
+    if (matchs.length == 0) {
+      break;
+    }
+    matchs.forEach((v: any) => {
+      handleMatch(v);
+    });
+    lastId = matchs[matchs.length - 1].match_id + 1;
+  }
   console.log("parseMatch");
 };
 const saveToDb = () => {
