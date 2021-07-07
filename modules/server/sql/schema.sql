@@ -25,3 +25,24 @@ ON "match" ("match_seq" ASC);
 
 CREATE INDEX "idx_time"
 ON "match" ("match_time" ASC);
+
+CREATE TABLE "hero_winrate" (
+"id"  INTEGER PRIMARY KEY NOT NULL,
+"name"  TEXT,
+"name_en"  TEXT,
+"name_cn"  TEXT,
+"match_count"  INTEGER,
+"win_count"  INTEGER,
+"winrate"  REAL
+);
+
+CREATE TABLE "ability_winrate" (
+"id"  INTEGER PRIMARY KEY NOT NULL,
+"name"  TEXT,
+"name_en"  TEXT,
+"name_cn"  TEXT,
+"match_count"  INTEGER,
+"win_count"  INTEGER,
+"winrate"  REAL
+);
+

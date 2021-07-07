@@ -61,10 +61,17 @@ const getRanged = (s: string) => {
 };
 const collectHeroMetaInfo = () => {
   console.log("collectMetaInfo");
+  //
+  const tokenMap: any = dotaSchinese.lang.Tokens;
+
   const heros: any = npcHeroes.DOTAHeroes;
   for (const k in heros) {
     const v = heros[k];
-    if (k.startsWith("npc_dota_hero") && k != "npc_dota_hero_base") {
+    if (
+      k.startsWith("npc_dota_hero") &&
+      k != "npc_dota_hero_base" &&
+      !k.includes("dummy")
+    ) {
       //
       const abilityList = [];
       for (let i = 0; i < 20; i++) {
@@ -83,7 +90,7 @@ const collectHeroMetaInfo = () => {
         id: v.HeroID,
         name: k,
         name_en: "",
-        name_cn: "",
+        name_cn: tokenMap[k] || "",
         attribute: getAttribute(v.AttributePrimary),
         ranged: getRanged(v.AttackCapabilities),
         matchCount: 0,
@@ -104,17 +111,16 @@ const collectHeroMetaInfo = () => {
 const collectAbilityMetaInfo = () => {
   //
   console.log("collectMetaInfo");
+  const tokenMap: any = dotaSchinese.lang.Tokens;
   const abilities: any = npcAbilities.DOTAAbilities;
   for (const k in abilities) {
     const v = abilities[k];
     if (activeAbilityMap[k]) {
-      //
-
       const ability: Ability = {
         id: v.ID,
         name: k,
         name_en: "",
-        name_cn: "",
+        name_cn: tokenMap["DOTA_Tooltip_ability_" + k],
         matchCount: 0,
         winCount: 0,
         winrate: 0,
@@ -128,7 +134,6 @@ const collectAbilityMetaInfo = () => {
   );
 };
 const handleMatch = async (match: any) => {
-  console.log(match.match_id);
   const matchData = JSON.parse(match.data);
   const radiant_win = matchData.radiant_win == 1;
   const players = matchData.players || [];
@@ -197,13 +202,32 @@ const parseMatch = async () => {
   }
   console.log("parseMatch");
 };
-const saveToDb = () => {
-  console.log("saveToDb");
+const saveToDb = async () => {
+  for (const id of Object.keys(herosIdMap)) {
+    const hero = herosIdMap[+id];
+    if (hero) {
+      await dbRun(`delete from hero_winrate where id=${id} `);
+      await dbRun(
+        `insert into hero_winrate (id,name,name_en,name_cn,match_count,win_count,winrate) values ` +
+          `(${id},'${hero.name}','${hero.name_en}','${hero.name_cn}',${hero.matchCount},${hero.winCount},${hero.winrate})`
+      );
+    }
+  }
+  for (const id of Object.keys(abilitiesIdMap)) {
+    const ability = abilitiesIdMap[+id];
+    if (ability) {
+      await dbRun(`delete from ability_winrate where id=${id} `);
+      await dbRun(
+        `insert into ability_winrate (id,name,name_en,name_cn,match_count,win_count,winrate) values ` +
+          `(${id},'${ability.name}','${ability.name_en}','${ability.name_cn}',${ability.matchCount},${ability.winCount},${ability.winrate})`
+      );
+    }
+  }
 };
 const main = async () => {
   collectHeroMetaInfo();
   collectAbilityMetaInfo();
-  parseMatch();
-  saveToDb();
+  await parseMatch();
+  await saveToDb();
 };
 main();
