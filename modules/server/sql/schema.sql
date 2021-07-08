@@ -46,3 +46,23 @@ CREATE TABLE "ability_winrate" (
 "winrate"  REAL
 );
 
+CREATE TABLE "combo_winrate" (
+"id1"  INTEGER,
+"id2"  INTEGER,
+"name1"  TEXT,
+"name_en1"  TEXT,
+"name_cn1"  TEXT,
+"name2"  TEXT,
+"name_en2"  TEXT,
+"name_cn2"  TEXT,
+
+"match_count"  INTEGER,
+"win_count"  INTEGER,
+"winrate"  REAL
+);
+
+CREATE INDEX "idx_id1"
+ON "combo_winrate" ("id1" ASC);
+CREATE INDEX "idx_id2"
+ON "combo_winrate" ("id2" ASC);
+

@@ -9,6 +9,7 @@ import abilitiesSchinese from "../data/abilities_schinese.json";
 import npcAbilities from "../data/npc_abilities.json";
 import npcHeroes from "../data/npc_heroes.json";
 import { dbRun, dbAll, dbGet } from "./utils/db";
+import { setKv } from "./utils/kv";
 
 var fs = require("fs");
 const util = require("util");
@@ -40,11 +41,26 @@ interface Ability {
   winrate: number;
 }
 
+interface Combo {
+  id1: number;
+  id2: number;
+  name1: string;
+  name_en1: string;
+  name_cn1: string;
+  name2: string;
+  name_en2: string;
+  name_cn2: string;
+  matchCount: number;
+  winCount: number;
+  winrate: number;
+}
+
 const herosIdMap: { [key: number]: Hero } = {};
 const abilitiesIdMap: { [key: number]: Ability } = {};
 const herosNameMap: { [key: string]: Hero } = {};
 const abilitiesNameMap: { [key: string]: Ability } = {};
 const activeAbilityMap: { [key: string]: boolean } = {};
+const comboMap: { [key: string]: Combo } = {};
 
 const getAttribute = (s: string) => {
   return s.split("_")[2].toLowerCase();
@@ -93,6 +109,7 @@ const collectHeroMetaInfo = () => {
       };
       herosNameMap[k] = hero;
       herosIdMap[v.HeroID] = hero;
+      //
     }
   }
   console.log(
@@ -122,20 +139,50 @@ const collectAbilityMetaInfo = () => {
       abilitiesIdMap[v.ID] = ability;
     }
   }
+  //
+  const abilityIds = Object.keys(abilitiesIdMap)
+    .map((v) => {
+      return +v;
+    })
+    .sort();
+  for (let i = 0; i < abilityIds.length; i++) {
+    for (let j = i + 1; j < abilityIds.length; j++) {
+      const id1 = abilityIds[i];
+      const id2 = abilityIds[j];
+      const k = id1 + " " + id2;
+      comboMap[k] = {
+        id1: id1,
+        id2: id2,
+        name1: abilitiesIdMap[id1].name,
+        name_en1: abilitiesIdMap[id1].name_en,
+        name_cn1: abilitiesIdMap[id1].name_cn,
+        name2: abilitiesIdMap[id2].name,
+        name_en2: abilitiesIdMap[id2].name_en,
+        name_cn2: abilitiesIdMap[id2].name_cn,
+        matchCount: 0,
+        winCount: 0,
+        winrate: 0.0,
+      };
+    }
+  }
+
   console.log(
-    `collectAbilityMetaInfo count ${Object.keys(abilitiesNameMap).length}`
+    `collectAbilityMetaInfo count ${Object.keys(abilitiesNameMap).length} ${
+      Object.keys(comboMap).length
+    }`
   );
 };
+
+const isRadiant = (slot: number) => {
+  return slot < 128;
+};
+
 const handleMatch = async (match: any) => {
   const matchData = JSON.parse(match.data);
   const radiant_win = matchData.radiant_win == 1;
   const players = matchData.players || [];
   const heros: any = {};
   const abilities: any = {};
-
-  const isRadiant = (slot: number) => {
-    return slot < 128;
-  };
 
   players.forEach((v: any) => {
     const radiant = isRadiant(v.player_slot);
@@ -178,6 +225,47 @@ const handleMatch = async (match: any) => {
     }
   }
 };
+
+const handleCombo = async (match: any) => {
+  const matchData = JSON.parse(match.data);
+  const radiant_win = matchData.radiant_win == 1;
+  const players = matchData.players || [];
+  //
+  players.forEach((v: any) => {
+    const radiant = isRadiant(v.player_slot);
+    let win = false;
+    if (radiant) {
+      win = radiant_win;
+    } else {
+      win = !radiant_win;
+    }
+    const abilityUpgrade = v.ability_upgrades || [];
+    const playerAbilities: any = {};
+    abilityUpgrade.forEach((ability: any) => {
+      playerAbilities[+ability.ability] = true;
+    });
+    //
+    const keys = Object.keys(playerAbilities)
+      .map((v) => +v)
+      .sort();
+    for (let i = 0; i < keys.length; i++) {
+      for (let j = 0; j < keys.length; j++) {
+        const key = keys[i] + " " + keys[j];
+        const combo = comboMap[key];
+        if (combo) {
+          combo.matchCount += 1;
+          if (win) {
+            combo.winCount += 1;
+          }
+          if (combo.matchCount >= 1) {
+            combo.winrate = combo.winCount / combo.matchCount;
+          }
+        }
+      }
+    }
+  });
+};
+
 const parseMatch = async () => {
   let lastId = 0;
   while (true) {
@@ -190,9 +278,11 @@ const parseMatch = async () => {
     }
     matchs.forEach((v: any) => {
       handleMatch(v);
+      handleCombo(v);
     });
     lastId = matchs[matchs.length - 1].match_id + 1;
   }
+
   console.log("parseMatch");
 };
 const saveToDb = async () => {
@@ -218,11 +308,37 @@ const saveToDb = async () => {
       );
     }
   }
+  //combo
+  //
+  let combos = Object.values(comboMap);
+  combos = combos.filter((v) => {
+    return v.matchCount > 100;
+  });
+  combos.sort((a: Combo, b: Combo) => {
+    return -(a.winrate - b.winrate);
+  });
+  combos = combos.slice(0, 300);
+  //
+  for (const i in combos) {
+    const combo = combos[i];
+    console.log("save combo ", combo.id1, combo.id2);
+    await dbRun(
+      `delete from combo_winrate where id1=${combo.id1} and id2=${combo.id2}`
+    );
+    await dbRun(
+      `insert into combo_winrate (id1,id2,name1,name_en1,name_cn1,name2,name_en2,name_cn2,match_count,win_count,winrate) values ` +
+        `(${combo.id1},${combo.id2},` +
+        `'${combo.name1}','${combo.name_en1}','${combo.name_cn1}',` +
+        `'${combo.name2}','${combo.name_en2}','${combo.name_cn2}',` +
+        `${combo.matchCount},${combo.winCount},${combo.winrate})`
+    );
+  }
 };
 const main = async () => {
   collectHeroMetaInfo();
   collectAbilityMetaInfo();
   await parseMatch();
   await saveToDb();
+  await setKv("statsUpdate", Date.now().toString());
 };
 main();
