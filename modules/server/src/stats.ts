@@ -291,10 +291,12 @@ const saveToDb = async () => {
     if (hero) {
       console.log("save hero ", id);
       await dbRun(`delete from hero_winrate where id=${id} `);
-      await dbRun(
-        `insert into hero_winrate (id,name,name_en,name_cn,match_count,win_count,winrate) values ` +
-          `(${id},'${hero.name}','${hero.name_en}','${hero.name_cn}',${hero.matchCount},${hero.winCount},${hero.winrate})`
-      );
+      if (hero.matchCount > 10) {
+        await dbRun(
+          `insert into hero_winrate (id,name,name_en,name_cn,match_count,win_count,winrate) values ` +
+            `(${id},'${hero.name}','${hero.name_en}','${hero.name_cn}',${hero.matchCount},${hero.winCount},${hero.winrate})`
+        );
+      }
     }
   }
   for (const id of Object.keys(abilitiesIdMap)) {
@@ -302,10 +304,12 @@ const saveToDb = async () => {
     if (ability) {
       console.log("save ability ", id);
       await dbRun(`delete from ability_winrate where id=${id} `);
-      await dbRun(
-        `insert into ability_winrate (id,name,name_en,name_cn,match_count,win_count,winrate) values ` +
-          `(${id},'${ability.name}','${ability.name_en}','${ability.name_cn}',${ability.matchCount},${ability.winCount},${ability.winrate})`
-      );
+      if (ability.matchCount > 10) {
+        await dbRun(
+          `insert into ability_winrate (id,name,name_en,name_cn,match_count,win_count,winrate) values ` +
+            `(${id},'${ability.name}','${ability.name_en}','${ability.name_cn}',${ability.matchCount},${ability.winCount},${ability.winrate})`
+        );
+      }
     }
   }
   //combo

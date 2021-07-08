@@ -27,6 +27,16 @@ router.all("/hero", async function (ctx: Context) {
     winrates,
   };
 });
+
+router.all("/combo", async function (ctx: Context) {
+  const winrates = await dbAll(
+    "select * from combo_winrate order by winrate desc"
+  );
+  ctx.body = {
+    winrates,
+  };
+});
+
 router.all("/stats", async function (ctx: Context) {
   const count = await dbGet("select count(*) as count from match");
   const first = await dbGet(
