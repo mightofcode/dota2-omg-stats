@@ -7,6 +7,9 @@ import WinrateLine from "@/component/IndexPage/WinrateLine";
 import { Table } from "semantic-ui-react";
 import CustomTable from "@/component/CustomTable";
 import TableHead from "@/component/WinrateTable/TableHead";
+import Divider from "@/component/util/divider";
+import SkillIcons from "@/component/ComboPage/SkillIcons";
+import SkillNames from "@/component/ComboPage/SkillNames";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -31,14 +34,9 @@ const Title = styled.div`
   color: #484848;
 `;
 
-const SkillIcon = styled.img`
-  border-radius: 2px;
-  width: 25%;
-`;
-
 const TableContainer = styled.div``;
 
-export default function SkillPage({ winrates }) {
+export default function ComboPage({ winrates }) {
   const router = useRouter();
 
   useEffect(() => {
@@ -47,7 +45,7 @@ export default function SkillPage({ winrates }) {
 
   return (
     <Wrapper>
-      <Title>技能胜率</Title>
+      <Title>组合胜率</Title>
       <TableContainer>
         <CustomTable>
           <Table.Header>
@@ -56,7 +54,7 @@ export default function SkillPage({ winrates }) {
                 <TableHead text={"#"} />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableHead text={"技能"} />
+                <TableHead text={"技能组合"} />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <TableHead text={"NAME-CN"} />
@@ -79,12 +77,14 @@ export default function SkillPage({ winrates }) {
                   {index + 1}
                 </Table.Cell>
                 <Table.Cell>
-                  <SkillIcon
-                    src={`https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/skills/${item.id}.png`}
-                  />
+                  <SkillIcons id1={item.id1} id2={item.id2} />
                 </Table.Cell>
-                <Table.Cell>{item.name_cn}</Table.Cell>
-                <Table.Cell>{item.name}</Table.Cell>
+                <Table.Cell>
+                  <SkillNames name1={item.name_cn1} name2={item.name_cn2} />
+                </Table.Cell>
+                <Table.Cell>
+                  <SkillNames name1={item.name1} name2={item.name2} />
+                </Table.Cell>
                 <Table.Cell>
                   {(item?.winrate * 100 || 0.0).toFixed(2)}%
                 </Table.Cell>

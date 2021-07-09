@@ -53,8 +53,14 @@ export default function Header({}) {
       <Divider width={"16px"} />
       <Title href={"/"}>LoveOMG</Title>
       <NavLinkDirect href={"/"}>首页</NavLinkDirect>
-      <NavLink text={"技能"} />
-      <NavLink text={"英雄"} />
+      <NavLink
+        text={"技能"}
+        items={[
+          { link: "/skill", name: "技能胜率" },
+          { link: "/combo", name: "组合胜率" },
+        ]}
+      />
+      <NavLink text={"英雄"} items={[{ link: "/hero", name: "英雄胜率" }]} />
       <NavLinkDirect href={"/stats"}>统计</NavLinkDirect>
     </Wrapper>
   );

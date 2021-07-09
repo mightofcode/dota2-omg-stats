@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-export default function NavLink({ text }) {
+export default function NavLink({ text, items }) {
   const router = useRouter();
 
   const [show, setShow] = useState(false);
@@ -37,7 +37,7 @@ export default function NavLink({ text }) {
           handleClick();
         }}
       />
-      {show && <NavLinkMenu />}
+      {show && <NavLinkMenu items={items} />}
     </Wrapper>
   );
 }

@@ -85,7 +85,9 @@ export default function HeroPage({ winrates }) {
                 </Table.Cell>
                 <Table.Cell>{item.name_cn}</Table.Cell>
                 <Table.Cell>{item.name}</Table.Cell>
-                <Table.Cell>{item.winrate}</Table.Cell>
+                <Table.Cell>
+                  {(item?.winrate * 100 || 0.0).toFixed(2)}%
+                </Table.Cell>
                 <Table.Cell>{item.match_count}</Table.Cell>
               </Table.Row>
             ))}
