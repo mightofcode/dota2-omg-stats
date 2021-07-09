@@ -28,13 +28,9 @@ export default function SkillIcons({ id1, id2 }) {
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <SkillIcon
-        src={`https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/skills/${id1}.png`}
-      />
+      <SkillIcon src={`/ability/${id1}.png`} />
       <Divider width={"10px"} />
-      <SkillIcon
-        src={`https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/skills/${id2}.png`}
-      />
+      <SkillIcon src={`/ability/${id2}.png`} />
     </Wrapper>
   );
 }

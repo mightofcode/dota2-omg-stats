@@ -38,9 +38,9 @@ export default function WinrateItem({ winrate, isHero }) {
   const text = (winrate?.winrate || 0.0).toFixed(2);
   let img = "";
   if (isHero) {
-    img = `https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/heros/${winrate.id}.png`;
+    img = `/hero/${winrate.id}.png`;
   } else {
-    img = `https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/skills/${winrate.id}.png`;
+    img = `/ability/${winrate.id}.png`;
   }
 
   return (

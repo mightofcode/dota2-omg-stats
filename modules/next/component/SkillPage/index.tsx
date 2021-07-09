@@ -74,14 +74,12 @@ export default function SkillPage({ winrates }) {
           </Table.Header>
           <Table.Body>
             {(winrates || []).map((item, index) => (
-              <Table.Row>
+              <Table.Row key={index}>
                 <Table.Cell style={{ minWidth: "80px" }}>
                   {index + 1}
                 </Table.Cell>
                 <Table.Cell>
-                  <SkillIcon
-                    src={`https://mocpublic.oss-cn-qingdao.aliyuncs.com/dota2/latest/skills/${item.id}.png`}
-                  />
+                  <SkillIcon src={`/ability/${item.id}.png`} />
                 </Table.Cell>
                 <Table.Cell>{item.name_cn}</Table.Cell>
                 <Table.Cell>{item.name}</Table.Cell>

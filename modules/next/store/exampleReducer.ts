@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { sleep } from "@/lib/utils/sleep";
+import { sleep } from "server/src/spider";
 
 const sliceName = "sliceName";
 const testSlice = createSlice({

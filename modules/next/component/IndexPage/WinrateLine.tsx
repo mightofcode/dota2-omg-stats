@@ -26,7 +26,7 @@ export default function WinrateLine({ winrates, isHero }) {
   return (
     <Wrapper>
       {(winrates || []).map((item) => (
-        <WinrateItem winrate={item} isHero={isHero} />
+        <WinrateItem key={item.id} winrate={item} isHero={isHero} />
       ))}
     </Wrapper>
   );
