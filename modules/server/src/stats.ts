@@ -4,12 +4,10 @@ const https = require("https");
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import axios from "axios";
-import dotaSchinese from "../data/dota_schinese.json";
-import abilitiesSchinese from "../data/abilities_schinese.json";
-import npcAbilities from "../data/npc_abilities.json";
-import npcHeroes from "../data/npc_heroes.json";
+
 import { dbRun, dbAll, dbGet } from "./utils/db";
 import { setKv } from "./utils/kv";
+import { loadDota2Kv } from "./utils/dota2kv";
 
 var fs = require("fs");
 const util = require("util");
@@ -17,6 +15,15 @@ const util = require("util");
 dotenv.config();
 
 console.log("start stats");
+
+const dotaSchinese = loadDota2Kv("data/dota_schinese.txt");
+console.log(1);
+const npcAbilities = loadDota2Kv("data/npc_abilities.txt");
+console.log(2);
+const npcHeroes = loadDota2Kv("data/npc_heroes.txt");
+console.log(3);
+const abilitiesSchinese = loadDota2Kv("data/abilities_schinese.txt");
+console.log(4);
 
 interface Hero {
   id: number;
@@ -85,6 +92,7 @@ const collectHeroMetaInfo = () => {
       const abilityList = [];
       for (let i = 0; i < 20; i++) {
         const skillId = v["Ability" + (i + 1)];
+
         if (
           skillId &&
           !skillId.startsWith("special_bonus") &&
@@ -121,16 +129,19 @@ const collectHeroMetaInfo = () => {
 const collectAbilityMetaInfo = () => {
   //
   console.log("collectMetaInfo");
-  const tokenMap: any = dotaSchinese.lang.Tokens;
+  const strMap: any = abilitiesSchinese.lang.Tokens;
   const abilities: any = npcAbilities.DOTAAbilities;
   for (const k in abilities) {
     const v = abilities[k];
     if (activeAbilityMap[k]) {
+      //
       const ability: Ability = {
         id: v.ID,
         name: k,
         name_en: "",
-        name_cn: tokenMap["DOTA_Tooltip_ability_" + k],
+        name_cn:
+          strMap["DOTA_Tooltip_ability_" + k] ||
+          strMap["DOTA_Tooltip_Ability_" + k],
         matchCount: 0,
         winCount: 0,
         winrate: 0,
