@@ -8,6 +8,7 @@ import axios from "axios";
 import { dbRun, dbAll, dbGet } from "./utils/db";
 import { setKv } from "./utils/kv";
 import { loadDota2Kv } from "./utils/dota2kv";
+import { download_image } from "./utils/utils";
 
 var fs = require("fs");
 const util = require("util");
@@ -121,7 +122,7 @@ const collectHeroMetaInfo = () => {
     }
   }
   console.log(
-    `collectHeroMetaInfo ${Object.keys(herosNameMap).length} ability count ${
+    `collectHeroMetaInfo ${Object.keys(herosIdMap).length} ability count ${
       Object.keys(activeAbilityMap).length
     }`
   );
@@ -349,6 +350,7 @@ const saveToDb = async () => {
     );
   }
 };
+
 const main = async () => {
   collectHeroMetaInfo();
   collectAbilityMetaInfo();
