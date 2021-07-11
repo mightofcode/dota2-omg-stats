@@ -23,9 +23,7 @@ export default function NavLink({ text, items }) {
   const router = useRouter();
 
   const [show, setShow] = useState(false);
-
   useEffect(() => {}, []);
-
   const handleClick = () => {
     setShow(!show);
   };
@@ -37,7 +35,7 @@ export default function NavLink({ text, items }) {
           handleClick();
         }}
       />
-      {show && <NavLinkMenu items={items} />}
+      {show && <NavLinkMenu items={items} setShowMenu={setShow} />}
     </Wrapper>
   );
 }

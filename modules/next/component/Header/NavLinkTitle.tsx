@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import * as React from "react";
 
-const Wrapper = styled.a`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -30,6 +30,7 @@ const LinkWrapper = styled.a``;
 
 export default function NavLinkTitle({ text, onClick }) {
   const router = useRouter();
+
   useEffect(() => {}, []);
   return (
     <Wrapper

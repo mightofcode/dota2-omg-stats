@@ -72,7 +72,7 @@ export default function ComboPage({ winrates }) {
           </Table.Header>
           <Table.Body>
             {(winrates || []).map((item, index) => (
-              <Table.Row>
+              <Table.Row key={item.id1 + "" + item.id2}>
                 <Table.Cell style={{ minWidth: "80px" }}>
                   {index + 1}
                 </Table.Cell>

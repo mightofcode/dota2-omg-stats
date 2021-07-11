@@ -56,7 +56,7 @@ export default function StatsPage({ stats }) {
       <Item>
         总场次<TextBold>{stats?.count}</TextBold>场
         <TextLight>
-          （{startDate.toLocaleDateString()}至{endDate.toLocaleDateString()}）
+          （{startDate.toISOString()}至{endDate.toISOString()}）
         </TextLight>
       </Item>
       <Item>
