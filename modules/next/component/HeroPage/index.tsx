@@ -41,8 +41,37 @@ const TableContainer = styled.div``;
 export default function HeroPage({ winrates }) {
   const router = useRouter();
 
+  const [winrateList, setWinrateList] = useState(winrates || []);
+
+  const [sortKey, setSortKey] = useState("winrate");
+  const [sorts, setSorts] = useState({
+    winrate: false,
+    match_count: false,
+  });
+
+  const sortWinrate = (key) => {
+    let isAsc;
+    if (key == sortKey) {
+      isAsc = !sorts[key];
+    } else {
+      isAsc = false;
+    }
+    console.log(key, isAsc);
+    setSortKey(key);
+    sorts[key] = isAsc;
+    setSorts(sorts);
+    winrates.sort((a, b) => {
+      let v = (+a[key] || 0) - (+b[key] || 0);
+      if (!isAsc) {
+        v = -v;
+      }
+      return v;
+    });
+    setWinrateList(winrates.slice());
+  };
+
   useEffect(() => {
-    console.log(winrates);
+    //console.log(winrates);
   }, []);
 
   return (
@@ -65,15 +94,27 @@ export default function HeroPage({ winrates }) {
                 <TableHead text={"NAME-EN"} />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableHead text={"胜率"} sortable={true} />
+                <TableHead
+                  text={"胜率"}
+                  sortable={true}
+                  onSortChange={() => {
+                    sortWinrate("winrate");
+                  }}
+                />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableHead text={"场次"} sortable={true} />
+                <TableHead
+                  text={"场次"}
+                  sortable={true}
+                  onSortChange={() => {
+                    sortWinrate("match_count");
+                  }}
+                />
               </Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {(winrates || []).map((item, index) => (
+            {(winrateList || []).map((item, index) => (
               <Table.Row key={index}>
                 <Table.Cell style={{ minWidth: "80px" }}>
                   {index + 1}

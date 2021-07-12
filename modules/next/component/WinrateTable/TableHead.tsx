@@ -52,13 +52,13 @@ export default function TableHead({
     }
   };
   return (
-    <Wrapper>
+    <Wrapper onClick={onClick}>
       {sortable ? (
         <ItemSortable>{text}</ItemSortable>
       ) : (
         <Item onClick={onClick}>{text}</Item>
       )}
-      {sortable && <SortSvg src={"/table-sort.svg"} onClick={onClick} />}
+      {sortable && <SortSvg src={"/table-sort.svg"} />}
     </Wrapper>
   );
 }
