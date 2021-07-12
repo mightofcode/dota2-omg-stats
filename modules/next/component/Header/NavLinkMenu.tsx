@@ -37,11 +37,10 @@ export default function NavLinkMenu({ items, setShowMenu }) {
   const dropDown = useRef();
   useOutsideClick(dropDown, () => {
     setShowMenu(false);
-    console.log(11);
   });
 
   return (
-    <Wrapper>
+    <Wrapper ref={dropDown}>
       {(items || []).map((item) => (
         <Item key={item.name} href={item.link}>
           {item.name}
