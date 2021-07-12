@@ -15,7 +15,7 @@ const util = require("util");
 
 dotenv.config();
 
-const COMBO_COUNT = 100;
+const COMBO_COUNT = 1000;
 console.log("start stats");
 
 const dotaSchinese = loadDota2Kv("data/dota_schinese.txt");
@@ -349,6 +349,7 @@ const fillSynergy = () => {
   }
 };
 const saveCombo = async () => {
+  await dbRun(`delete from combo_winrate`);
   //
   let combos = Object.values(comboMap);
   combos = combos.filter((v) => {
@@ -375,6 +376,7 @@ const saveCombo = async () => {
   }
 };
 const saveComboSynergy = async () => {
+  await dbRun(`delete from combo_winrate_synergy`);
   //
   let combos = Object.values(comboMap);
   combos = combos.filter((v) => {

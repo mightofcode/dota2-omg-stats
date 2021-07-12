@@ -58,6 +58,7 @@ export default function Header({}) {
         items={[
           { link: "/skill", name: "技能胜率" },
           { link: "/combo", name: "组合胜率" },
+          { link: "/synergy", name: "协作" },
         ]}
       />
       <NavLink text={"英雄"} items={[{ link: "/hero", name: "英雄胜率" }]} />

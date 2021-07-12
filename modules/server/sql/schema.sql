@@ -46,6 +46,9 @@ CREATE TABLE "ability_winrate" (
 "winrate"  REAL
 );
 
+
+drop table combo_winrate;
+
 CREATE TABLE "combo_winrate" (
 "id1"  INTEGER,
 "id2"  INTEGER,
@@ -67,6 +70,8 @@ CREATE INDEX "idx_combo_winrate_id1"
 ON "combo_winrate" ("id1" ASC);
 CREATE INDEX "idx_combo_winrate_id2"
 ON "combo_winrate" ("id2" ASC);
+
+drop table combo_winrate_synergy;
 
 CREATE TABLE "combo_winrate_synergy" (
 "id1"  INTEGER,
