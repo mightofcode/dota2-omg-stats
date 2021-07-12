@@ -6,7 +6,7 @@
     "dev": "next dev -p 5200",
     "build": "next build ",
     "start": "next start -p 5200",
-    "deploy": "pm2 start npm --name \"loveomg-next\" -- start"
+    "deploy": "yarn build && pm2 delete loveomg-next &&  pm2 start npm --name \"loveomg-next\" -- start"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.0",
