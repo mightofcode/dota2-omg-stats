@@ -92,11 +92,26 @@ export default function ComboPage({ winrates }) {
                 <TableHead text={"NAME-EN"} />
               </Table.HeaderCell>
               <Table.HeaderCell>
+                <TableHead text={"技能1胜率"} />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableHead text={"技能2胜率"} />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
                 <TableHead
-                  text={"胜率"}
+                  text={"组合胜率"}
                   sortable={true}
                   onSortChange={() => {
                     sortWinrate("winrate");
+                  }}
+                />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableHead
+                  text={"协作"}
+                  sortable={true}
+                  onSortChange={() => {
+                    sortWinrate("synergy");
                   }}
                 />
               </Table.HeaderCell>
@@ -126,8 +141,18 @@ export default function ComboPage({ winrates }) {
                 <Table.Cell>
                   <SkillNames name1={item.name1} name2={item.name2} />
                 </Table.Cell>
+
+                <Table.Cell>
+                  {(item?.winrate1 * 100 || 0.0).toFixed(2)}%
+                </Table.Cell>
+                <Table.Cell>
+                  {(item?.winrate2 * 100 || 0.0).toFixed(2)}%
+                </Table.Cell>
                 <Table.Cell>
                   {(item?.winrate * 100 || 0.0).toFixed(2)}%
+                </Table.Cell>
+                <Table.Cell>
+                  {(item?.synergy * 100 || 0.0).toFixed(2)}%
                 </Table.Cell>
                 <Table.Cell>{item.match_count}</Table.Cell>
               </Table.Row>
