@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { sleep } from "server/src/spider";
 
 const sliceName = "sliceName";
 const testSlice = createSlice({
@@ -23,7 +22,6 @@ export const fooSelector = (state) => state[sliceName].test;
 
 export const { setTest, clearTest } = testSlice.actions;
 export const fetchData = (foo) => async (dispatch) => {
-  await sleep(100);
   dispatch(setTest(foo));
 };
 

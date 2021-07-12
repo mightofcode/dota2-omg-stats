@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import * as React from "react";
-
+import dayjs from "dayjs";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,14 +56,18 @@ export default function StatsPage({ stats }) {
       <Item>
         总场次<TextBold>{stats?.count}</TextBold>场
         <TextLight>
-          （{startDate.toLocaleDateString()}至{endDate.toLocaleDateString()}）
+          （{dayjs(startDate).format("YYYY-MM-DD hh-mm")} 至{" "}
+          {dayjs(endDate).format("YYYY-MM-DD hh-mm")}）
         </TextLight>
       </Item>
       <Item>
         本站统计最近<TextBold>十天</TextBold>的数据
       </Item>
       <Item>
-        最近更新时间：<TextBold>2021-01-01</TextBold>
+        最近更新时间：
+        <TextBold>
+          {dayjs(+stats?.statsUpdate || 0).format("YYYY-MM-DD hh-mm")}
+        </TextBold>
       </Item>
     </Wrapper>
   );

@@ -7,6 +7,9 @@ import WinrateLine from "@/component/IndexPage/WinrateLine";
 import { Table } from "semantic-ui-react";
 import CustomTable from "@/component/CustomTable";
 import TableHead from "@/component/WinrateTable/TableHead";
+import Divider from "@/component/util/divider";
+import SkillIcons from "@/component/ComboPage/SkillIcons";
+import SkillNames from "@/component/ComboPage/SkillNames";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -31,14 +34,9 @@ const Title = styled.div`
   color: #484848;
 `;
 
-const SkillIcon = styled.img`
-  border-radius: 2px;
-  width: 50%;
-`;
-
 const TableContainer = styled.div``;
 
-export default function HeroPage({ winrates }) {
+export default function SynergyPage({ winrates }) {
   const router = useRouter();
 
   const [winrateList, setWinrateList] = useState(winrates || []);
@@ -71,12 +69,12 @@ export default function HeroPage({ winrates }) {
   };
 
   useEffect(() => {
-    //console.log(winrates);
+    console.log(winrates);
   }, []);
 
   return (
     <Wrapper>
-      <Title>英雄胜率</Title>
+      <Title>协作</Title>
       <TableContainer>
         <CustomTable>
           <Table.Header>
@@ -85,7 +83,7 @@ export default function HeroPage({ winrates }) {
                 <TableHead text={"#"} />
               </Table.HeaderCell>
               <Table.HeaderCell>
-                <TableHead text={"英雄"} />
+                <TableHead text={"技能组合"} />
               </Table.HeaderCell>
               <Table.HeaderCell>
                 <TableHead text={"NAME-CN"} />
@@ -94,11 +92,26 @@ export default function HeroPage({ winrates }) {
                 <TableHead text={"NAME-EN"} />
               </Table.HeaderCell>
               <Table.HeaderCell>
+                <TableHead text={"技能1胜率"} />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableHead text={"技能2胜率"} />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
                 <TableHead
-                  text={"胜率"}
+                  text={"组合胜率"}
                   sortable={true}
                   onSortChange={() => {
                     sortWinrate("winrate");
+                  }}
+                />
+              </Table.HeaderCell>
+              <Table.HeaderCell>
+                <TableHead
+                  text={"协作"}
+                  sortable={true}
+                  onSortChange={() => {
+                    sortWinrate("synergy");
                   }}
                 />
               </Table.HeaderCell>
@@ -114,18 +127,32 @@ export default function HeroPage({ winrates }) {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            {(winrateList || []).map((item, index) => (
-              <Table.Row key={index}>
+            {(winrates || []).map((item, index) => (
+              <Table.Row key={item.id1 + "" + item.id2}>
                 <Table.Cell style={{ minWidth: "80px" }}>
                   {index + 1}
                 </Table.Cell>
                 <Table.Cell>
-                  <SkillIcon src={`/hero/${item.id}.png`} />
+                  <SkillIcons id1={item.id1} id2={item.id2} />
                 </Table.Cell>
-                <Table.Cell>{item.name_cn}</Table.Cell>
-                <Table.Cell>{item.name}</Table.Cell>
+                <Table.Cell>
+                  <SkillNames name1={item.name_cn1} name2={item.name_cn2} />
+                </Table.Cell>
+                <Table.Cell>
+                  <SkillNames name1={item.name1} name2={item.name2} />
+                </Table.Cell>
+
+                <Table.Cell>
+                  {(item?.winrate1 * 100 || 0.0).toFixed(2)}%
+                </Table.Cell>
+                <Table.Cell>
+                  {(item?.winrate2 * 100 || 0.0).toFixed(2)}%
+                </Table.Cell>
                 <Table.Cell>
                   {(item?.winrate * 100 || 0.0).toFixed(2)}%
+                </Table.Cell>
+                <Table.Cell>
+                  {(item?.synergy * 100 || 0.0).toFixed(2)}%
                 </Table.Cell>
                 <Table.Cell>{item.match_count}</Table.Cell>
               </Table.Row>

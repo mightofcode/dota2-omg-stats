@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import * as React from "react";
+import useOutsideClick from "@/utils/useOutsideClick";
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,14 +30,21 @@ const Item = styled.a`
   white-space: nowrap;
 `;
 
-export default function NavLinkMenu({ items }) {
+export default function NavLinkMenu({ items, setShowMenu }) {
   const router = useRouter();
   useEffect(() => {}, []);
 
+  const dropDown = useRef();
+  useOutsideClick(dropDown, () => {
+    setShowMenu(false);
+  });
+
   return (
-    <Wrapper>
+    <Wrapper ref={dropDown}>
       {(items || []).map((item) => (
-        <Item href={item.link}>{item.name}</Item>
+        <Item key={item.name} href={item.link}>
+          {item.name}
+        </Item>
       ))}
     </Wrapper>
   );
