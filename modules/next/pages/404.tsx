@@ -16,9 +16,11 @@ const FlexWrapper = styled.div``;
 export default withLoginUserRedux(() => {
   const router = useRouter();
 
+  const NAME = process.env.NEXT_PUBLIC_SITE_NAME;
+
   return (
     <>
-      <PageHead title="LoveOMG" />
+      <PageHead title={NAME} />
       <Layout>
         <Container>
           <NotFound />

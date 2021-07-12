@@ -51,7 +51,7 @@ export default function Header({}) {
   return (
     <Wrapper>
       <Divider width={"16px"} />
-      <Title href={"/"}>LoveOMG</Title>
+      <Title href={"/"}>{process.env.NEXT_PUBLIC_SITE_NAME}</Title>
       <NavLinkDirect href={"/"}>首页</NavLinkDirect>
       <NavLink
         text={"技能"}
