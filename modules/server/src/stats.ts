@@ -15,6 +15,7 @@ const util = require("util");
 
 dotenv.config();
 
+const COMBO_COUNT = 100;
 console.log("start stats");
 
 const dotaSchinese = loadDota2Kv("data/dota_schinese.txt");
@@ -61,6 +62,9 @@ interface Combo {
   matchCount: number;
   winCount: number;
   winrate: number;
+  winrate1: number;
+  winrate2: number;
+  synergy: number;
 }
 
 const herosIdMap: { [key: number]: Hero } = {};
@@ -75,6 +79,10 @@ const getAttribute = (s: string) => {
 };
 const getRanged = (s: string) => {
   return s == "DOTA_UNIT_CAP_RANGED_ATTACK";
+};
+
+const getSynergy = (winrate: number, winrate1: number, winrate2: number) => {
+  return winrate - (winrate1 + winrate2) / 2;
 };
 const collectHeroMetaInfo = () => {
   console.log("collectMetaInfo");
@@ -174,6 +182,9 @@ const collectAbilityMetaInfo = () => {
         matchCount: 0,
         winCount: 0,
         winrate: 0.0,
+        winrate1: 0.0,
+        winrate2: 0.0,
+        synergy: 0.0,
       };
     }
   }
@@ -297,7 +308,7 @@ const parseMatch = async () => {
 
   console.log("parseMatch");
 };
-const saveToDb = async () => {
+const saveHeroAndAbility = async () => {
   for (const id of Object.keys(herosIdMap)) {
     const hero = herosIdMap[+id];
     if (hero) {
@@ -324,7 +335,20 @@ const saveToDb = async () => {
       }
     }
   }
-  //combo
+};
+const fillSynergy = () => {
+  for (const k of Object.keys(comboMap)) {
+    const combo = comboMap[k];
+    combo.winrate1 = abilitiesIdMap[combo.id1].winrate;
+    combo.winrate2 = abilitiesIdMap[combo.id2].winrate;
+    combo.synergy = getSynergy(
+      combo.winrate,
+      abilitiesIdMap[combo.id1].winrate,
+      abilitiesIdMap[combo.id2].winrate
+    );
+  }
+};
+const saveCombo = async () => {
   //
   let combos = Object.values(comboMap);
   combos = combos.filter((v) => {
@@ -333,7 +357,7 @@ const saveToDb = async () => {
   combos.sort((a: Combo, b: Combo) => {
     return -(a.winrate - b.winrate);
   });
-  combos = combos.slice(0, 300);
+  combos = combos.slice(0, COMBO_COUNT);
   //
   for (const i in combos) {
     const combo = combos[i];
@@ -342,11 +366,37 @@ const saveToDb = async () => {
       `delete from combo_winrate where id1=${combo.id1} and id2=${combo.id2}`
     );
     await dbRun(
-      `insert into combo_winrate (id1,id2,name1,name_en1,name_cn1,name2,name_en2,name_cn2,match_count,win_count,winrate) values ` +
+      `insert into combo_winrate (id1,id2,name1,name_en1,name_cn1,name2,name_en2,name_cn2,match_count,win_count,winrate,winrate1,winrate2,synergy) values ` +
         `(${combo.id1},${combo.id2},` +
         `'${combo.name1}','${combo.name_en1}','${combo.name_cn1}',` +
         `'${combo.name2}','${combo.name_en2}','${combo.name_cn2}',` +
-        `${combo.matchCount},${combo.winCount},${combo.winrate})`
+        `${combo.matchCount},${combo.winCount},${combo.winrate},${combo.winrate1},${combo.winrate2},${combo.synergy})`
+    );
+  }
+};
+const saveComboSynergy = async () => {
+  //
+  let combos = Object.values(comboMap);
+  combos = combos.filter((v) => {
+    return v.matchCount > 100;
+  });
+  combos.sort((a: Combo, b: Combo) => {
+    return -(a.synergy - b.synergy);
+  });
+  combos = combos.slice(0, COMBO_COUNT);
+  //
+  for (const i in combos) {
+    const combo = combos[i];
+    console.log("save combo ", combo.id1, combo.id2);
+    await dbRun(
+      `delete from combo_winrate where id1=${combo.id1} and id2=${combo.id2}`
+    );
+    await dbRun(
+      `insert into combo_winrate_synergy (id1,id2,name1,name_en1,name_cn1,name2,name_en2,name_cn2,match_count,win_count,winrate,winrate1,winrate2,synergy) values ` +
+        `(${combo.id1},${combo.id2},` +
+        `'${combo.name1}','${combo.name_en1}','${combo.name_cn1}',` +
+        `'${combo.name2}','${combo.name_en2}','${combo.name_cn2}',` +
+        `${combo.matchCount},${combo.winCount},${combo.winrate},${combo.winrate1},${combo.winrate2},${combo.synergy})`
     );
   }
 };
@@ -355,7 +405,10 @@ const main = async () => {
   collectHeroMetaInfo();
   collectAbilityMetaInfo();
   await parseMatch();
-  await saveToDb();
+  fillSynergy();
+  await saveHeroAndAbility();
+  await saveCombo();
+  saveComboSynergy();
   await setKv("statsUpdate", Date.now().toString());
 };
 main();

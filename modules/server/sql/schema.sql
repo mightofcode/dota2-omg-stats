@@ -55,14 +55,38 @@ CREATE TABLE "combo_winrate" (
 "name2"  TEXT,
 "name_en2"  TEXT,
 "name_cn2"  TEXT,
-
 "match_count"  INTEGER,
 "win_count"  INTEGER,
-"winrate"  REAL
+"winrate"  REAL,
+"synergy"  REAL,
+"winrate1"  REAL,
+"winrate2"  REAL
 );
 
-CREATE INDEX "idx_id1"
+CREATE INDEX "idx_combo_winrate_id1"
 ON "combo_winrate" ("id1" ASC);
-CREATE INDEX "idx_id2"
+CREATE INDEX "idx_combo_winrate_id2"
 ON "combo_winrate" ("id2" ASC);
+
+CREATE TABLE "combo_winrate_synergy" (
+"id1"  INTEGER,
+"id2"  INTEGER,
+"name1"  TEXT,
+"name_en1"  TEXT,
+"name_cn1"  TEXT,
+"name2"  TEXT,
+"name_en2"  TEXT,
+"name_cn2"  TEXT,
+"match_count"  INTEGER,
+"win_count"  INTEGER,
+"winrate"  REAL,
+"synergy"  REAL,
+"winrate1"  REAL,
+"winrate2"  REAL
+);
+
+CREATE INDEX "idx_combo_winrate_synergy_id1"
+ON "combo_winrate_synergy" ("id1" ASC);
+CREATE INDEX "idx_combo_winrate_synergy_id2"
+ON "combo_winrate_synergy" ("id2" ASC);
 
