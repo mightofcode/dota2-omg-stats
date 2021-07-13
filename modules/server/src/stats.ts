@@ -19,13 +19,9 @@ const COMBO_COUNT = 1000;
 console.log("start stats");
 
 const dotaSchinese = loadDota2Kv("data/dota_schinese.txt");
-console.log(1);
 const npcAbilities = loadDota2Kv("data/npc_abilities.txt");
-console.log(2);
 const npcHeroes = loadDota2Kv("data/npc_heroes.txt");
-console.log(3);
 const abilitiesSchinese = loadDota2Kv("data/abilities_schinese.txt");
-console.log(4);
 
 interface Hero {
   id: number;
@@ -72,7 +68,8 @@ const abilitiesIdMap: { [key: number]: Ability } = {};
 const herosNameMap: { [key: string]: Hero } = {};
 const abilitiesNameMap: { [key: string]: Ability } = {};
 const activeAbilityMap: { [key: string]: boolean } = {};
-const comboMap: { [key: string]: Combo } = {};
+const skillComboMap: { [key: string]: Combo } = {};
+const heroSkillComboMap: { [key: string]: Combo } = {};
 
 const getAttribute = (s: string) => {
   return s.split("_")[2].toLowerCase();
@@ -159,6 +156,15 @@ const collectAbilityMetaInfo = () => {
       abilitiesIdMap[v.ID] = ability;
     }
   }
+
+  console.log(
+    `collectAbilityMetaInfo count ${Object.keys(abilitiesNameMap).length} ${
+      Object.keys(skillComboMap).length
+    }`
+  );
+};
+
+const collectSkillCombo = () => {
   //
   const abilityIds = Object.keys(abilitiesIdMap)
     .map((v) => {
@@ -170,7 +176,7 @@ const collectAbilityMetaInfo = () => {
       const id1 = abilityIds[i];
       const id2 = abilityIds[j];
       const k = id1 + " " + id2;
-      comboMap[k] = {
+      skillComboMap[k] = {
         id1: id1,
         id2: id2,
         name1: abilitiesIdMap[id1].name,
@@ -188,12 +194,43 @@ const collectAbilityMetaInfo = () => {
       };
     }
   }
+};
 
-  console.log(
-    `collectAbilityMetaInfo count ${Object.keys(abilitiesNameMap).length} ${
-      Object.keys(comboMap).length
-    }`
-  );
+const collectHeroSkillCombo = () => {
+  //
+  const abilityIds = Object.keys(abilitiesIdMap)
+    .map((v) => {
+      return +v;
+    })
+    .sort();
+  const heroIds = Object.keys(herosIdMap)
+    .map((v) => {
+      return +v;
+    })
+    .sort();
+  for (let i = 0; i < heroIds.length; i++) {
+    for (let j = i + 1; j < abilityIds.length; j++) {
+      const id1 = heroIds[i];
+      const id2 = abilityIds[j];
+      const k = id1 + " " + id2;
+      heroSkillComboMap[k] = {
+        id1: id1,
+        id2: id2,
+        name1: herosIdMap[id1].name,
+        name_en1: herosIdMap[id1].name_en,
+        name_cn1: herosIdMap[id1].name_cn,
+        name2: abilitiesIdMap[id2].name,
+        name_en2: abilitiesIdMap[id2].name_en,
+        name_cn2: abilitiesIdMap[id2].name_cn,
+        matchCount: 0,
+        winCount: 0,
+        winrate: 0.0,
+        winrate1: 0.0,
+        winrate2: 0.0,
+        synergy: 0.0,
+      };
+    }
+  }
 };
 
 const isRadiant = (slot: number) => {
@@ -274,7 +311,7 @@ const handleCombo = async (match: any) => {
     for (let i = 0; i < keys.length; i++) {
       for (let j = 0; j < keys.length; j++) {
         const key = keys[i] + " " + keys[j];
-        const combo = comboMap[key];
+        const combo = skillComboMap[key];
         if (combo) {
           combo.matchCount += 1;
           if (win) {
@@ -283,6 +320,42 @@ const handleCombo = async (match: any) => {
           if (combo.matchCount >= 1) {
             combo.winrate = combo.winCount / combo.matchCount;
           }
+        }
+      }
+    }
+  });
+};
+
+const handleHeroSkillCombo = async (match: any) => {
+  const matchData = JSON.parse(match.data);
+  const radiant_win = matchData.radiant_win == 1;
+  const players = matchData.players || [];
+  //
+  players.forEach((v: any) => {
+    const radiant = isRadiant(v.player_slot);
+    let win = false;
+    if (radiant) {
+      win = radiant_win;
+    } else {
+      win = !radiant_win;
+    }
+    const abilityUpgrade = v.ability_upgrades || [];
+    const playerAbilities: any = {};
+    abilityUpgrade.forEach((ability: any) => {
+      playerAbilities[+ability.ability] = true;
+    });
+    const heroId = v.hero_id;
+    for (const key of Object.keys(playerAbilities)) {
+      const abilityId = +key;
+      const k = heroId + " " + abilityId;
+      const combo = heroSkillComboMap[k];
+      if (combo) {
+        combo.matchCount += 1;
+        if (win) {
+          combo.winCount += 1;
+        }
+        if (combo.matchCount >= 1) {
+          combo.winrate = combo.winCount / combo.matchCount;
         }
       }
     }
@@ -302,6 +375,7 @@ const parseMatch = async () => {
     matchs.forEach((v: any) => {
       handleMatch(v);
       handleCombo(v);
+      handleHeroSkillCombo(v);
     });
     lastId = matchs[matchs.length - 1].match_id + 1;
   }
@@ -337,8 +411,8 @@ const saveHeroAndAbility = async () => {
   }
 };
 const fillSynergy = () => {
-  for (const k of Object.keys(comboMap)) {
-    const combo = comboMap[k];
+  for (const k of Object.keys(skillComboMap)) {
+    const combo = skillComboMap[k];
     combo.winrate1 = abilitiesIdMap[combo.id1].winrate;
     combo.winrate2 = abilitiesIdMap[combo.id2].winrate;
     combo.synergy = getSynergy(
@@ -347,14 +421,23 @@ const fillSynergy = () => {
       abilitiesIdMap[combo.id2].winrate
     );
   }
+  for (const k of Object.keys(heroSkillComboMap)) {
+    const combo = heroSkillComboMap[k];
+    combo.winrate1 = herosIdMap[combo.id1].winrate;
+    combo.winrate2 = abilitiesIdMap[combo.id2].winrate;
+    combo.synergy = getSynergy(
+      combo.winrate,
+      herosIdMap[combo.id1].winrate,
+      abilitiesIdMap[combo.id2].winrate
+    );
+  }
 };
-const saveCombo = async () => {
+
+const saveSkillCombo = async () => {
   await dbRun(`delete from combo_winrate`);
   //
-  let combos = Object.values(comboMap);
-  combos = combos.filter((v) => {
-    return v.matchCount > 100;
-  });
+  let combos = Object.values(skillComboMap);
+
   combos.sort((a: Combo, b: Combo) => {
     return -(a.winrate - b.winrate);
   });
@@ -375,13 +458,38 @@ const saveCombo = async () => {
     );
   }
 };
-const saveComboSynergy = async () => {
+
+const saveHeroSkillCombo = async () => {
+  await dbRun(`delete from heroskill_combo_winrate`);
+  //
+  let combos = Object.values(heroSkillComboMap);
+
+  combos.sort((a: Combo, b: Combo) => {
+    return -(a.winrate - b.winrate);
+  });
+  combos = combos.slice(0, COMBO_COUNT);
+  //
+  for (const i in combos) {
+    const combo = combos[i];
+    console.log("save combo ", combo.id1, combo.id2);
+    await dbRun(
+      `delete from heroskill_combo_winrate where id1=${combo.id1} and id2=${combo.id2}`
+    );
+    await dbRun(
+      `insert into heroskill_combo_winrate (id1,id2,name1,name_en1,name_cn1,name2,name_en2,name_cn2,match_count,win_count,winrate,winrate1,winrate2,synergy) values ` +
+        `(${combo.id1},${combo.id2},` +
+        `'${combo.name1}','${combo.name_en1}','${combo.name_cn1}',` +
+        `'${combo.name2}','${combo.name_en2}','${combo.name_cn2}',` +
+        `${combo.matchCount},${combo.winCount},${combo.winrate},${combo.winrate1},${combo.winrate2},${combo.synergy})`
+    );
+  }
+};
+
+const saveSkillSynergy = async () => {
   await dbRun(`delete from combo_winrate_synergy`);
   //
-  let combos = Object.values(comboMap);
-  combos = combos.filter((v) => {
-    return v.matchCount > 100;
-  });
+  let combos = Object.values(skillComboMap);
+
   combos.sort((a: Combo, b: Combo) => {
     return -(a.synergy - b.synergy);
   });
@@ -403,14 +511,44 @@ const saveComboSynergy = async () => {
   }
 };
 
+const saveHeroSkillSynergy = async () => {
+  await dbRun(`delete from heroskill_combo_synergy`);
+  //
+  let combos = Object.values(heroSkillComboMap);
+
+  combos.sort((a: Combo, b: Combo) => {
+    return -(a.synergy - b.synergy);
+  });
+  combos = combos.slice(0, COMBO_COUNT);
+  //
+  for (const i in combos) {
+    const combo = combos[i];
+    console.log("save combo ", combo.id1, combo.id2);
+    await dbRun(
+      `delete from heroskill_combo_synergy where id1=${combo.id1} and id2=${combo.id2}`
+    );
+    await dbRun(
+      `insert into heroskill_combo_synergy (id1,id2,name1,name_en1,name_cn1,name2,name_en2,name_cn2,match_count,win_count,winrate,winrate1,winrate2,synergy) values ` +
+        `(${combo.id1},${combo.id2},` +
+        `'${combo.name1}','${combo.name_en1}','${combo.name_cn1}',` +
+        `'${combo.name2}','${combo.name_en2}','${combo.name_cn2}',` +
+        `${combo.matchCount},${combo.winCount},${combo.winrate},${combo.winrate1},${combo.winrate2},${combo.synergy})`
+    );
+  }
+};
+
 const main = async () => {
   collectHeroMetaInfo();
   collectAbilityMetaInfo();
+  collectSkillCombo();
+  collectHeroSkillCombo();
   await parseMatch();
   fillSynergy();
   await saveHeroAndAbility();
-  await saveCombo();
-  saveComboSynergy();
+  await saveSkillCombo();
+  await saveSkillSynergy();
+  await saveHeroSkillCombo();
+  await saveHeroSkillSynergy();
   await setKv("statsUpdate", Date.now().toString());
 };
 main();

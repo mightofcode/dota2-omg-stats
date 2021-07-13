@@ -13,7 +13,7 @@ router.all("/test", async function (ctx: Context) {
 
 router.all("/ability", async function (ctx: Context) {
   const winrates = await dbAll(
-    "select * from ability_winrate order by winrate desc"
+    "select * from ability_winrate where match_count>100 order by winrate desc "
   );
   ctx.body = {
     winrates,
@@ -22,7 +22,7 @@ router.all("/ability", async function (ctx: Context) {
 
 router.all("/hero", async function (ctx: Context) {
   const winrates = await dbAll(
-    "select * from hero_winrate order by winrate desc"
+    "select * from hero_winrate where match_count>100 order by winrate desc "
   );
   ctx.body = {
     winrates,
@@ -31,16 +31,33 @@ router.all("/hero", async function (ctx: Context) {
 
 router.all("/combo", async function (ctx: Context) {
   const winrates = await dbAll(
-    "select * from combo_winrate order by winrate desc"
+    "select * from combo_winrate where match_count>100 order by winrate desc "
+  );
+  ctx.body = {
+    winrates,
+  };
+});
+router.all("/synergy", async function (ctx: Context) {
+  const winrates = await dbAll(
+    "select * from combo_winrate_synergy where match_count>100 order by synergy desc"
   );
   ctx.body = {
     winrates,
   };
 });
 
-router.all("/synergy", async function (ctx: Context) {
+router.all("/heroSkillCombo", async function (ctx: Context) {
   const winrates = await dbAll(
-    "select * from combo_winrate_synergy order by synergy desc"
+    "select * from heroskill_combo_winrate where match_count>50 order by winrate desc "
+  );
+  ctx.body = {
+    winrates,
+  };
+});
+
+router.all("/heroSkillSynergy", async function (ctx: Context) {
+  const winrates = await dbAll(
+    "select * from heroskill_combo_synergy where match_count>50 order by synergy desc "
   );
   ctx.body = {
     winrates,
