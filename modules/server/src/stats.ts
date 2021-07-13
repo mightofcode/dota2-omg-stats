@@ -437,7 +437,9 @@ const saveSkillCombo = async () => {
   await dbRun(`delete from combo_winrate`);
   //
   let combos = Object.values(skillComboMap);
-
+  combos = combos.filter((v) => {
+    return v.matchCount > 100;
+  });
   combos.sort((a: Combo, b: Combo) => {
     return -(a.winrate - b.winrate);
   });
@@ -463,6 +465,9 @@ const saveHeroSkillCombo = async () => {
   await dbRun(`delete from heroskill_combo_winrate`);
   //
   let combos = Object.values(heroSkillComboMap);
+  combos = combos.filter((v) => {
+    return v.matchCount > 50;
+  });
 
   combos.sort((a: Combo, b: Combo) => {
     return -(a.winrate - b.winrate);
@@ -489,7 +494,9 @@ const saveSkillSynergy = async () => {
   await dbRun(`delete from combo_winrate_synergy`);
   //
   let combos = Object.values(skillComboMap);
-
+  combos = combos.filter((v) => {
+    return v.matchCount > 100;
+  });
   combos.sort((a: Combo, b: Combo) => {
     return -(a.synergy - b.synergy);
   });
@@ -515,6 +522,9 @@ const saveHeroSkillSynergy = async () => {
   await dbRun(`delete from heroskill_combo_synergy`);
   //
   let combos = Object.values(heroSkillComboMap);
+  combos = combos.filter((v) => {
+    return v.matchCount > 50;
+  });
 
   combos.sort((a: Combo, b: Combo) => {
     return -(a.synergy - b.synergy);
