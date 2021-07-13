@@ -61,7 +61,14 @@ export default function Header({}) {
           { link: "/synergy", name: "协作" },
         ]}
       />
-      <NavLink text={"英雄"} items={[{ link: "/hero", name: "英雄胜率" }]} />
+      <NavLink
+        text={"英雄"}
+        items={[
+          { link: "/hero", name: "英雄胜率" },
+          { link: "/heroskill/winrate", name: "英雄技能胜率" },
+          { link: "/heroskill/synergy", name: "英雄技能协作" },
+        ]}
+      />
       <NavLinkDirect href={"/stats"}>统计</NavLinkDirect>
     </Wrapper>
   );

@@ -72,7 +72,6 @@ router.all("/stats", async function (ctx: Context) {
   const last = await dbGet(
     "select match_id,match_time from match order by match_id desc"
   );
-
   const statsUpdate = await getKv("statsUpdate");
 
   ctx.body = {
