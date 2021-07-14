@@ -466,7 +466,7 @@ const saveHeroSkillCombo = async () => {
   //
   let combos = Object.values(heroSkillComboMap);
   combos = combos.filter((v) => {
-    return v.matchCount > 50;
+    return v.matchCount > 100;
   });
 
   combos.sort((a: Combo, b: Combo) => {
@@ -523,7 +523,7 @@ const saveHeroSkillSynergy = async () => {
   //
   let combos = Object.values(heroSkillComboMap);
   combos = combos.filter((v) => {
-    return v.matchCount > 50;
+    return v.matchCount > 100;
   });
 
   combos.sort((a: Combo, b: Combo) => {
