@@ -25,6 +25,16 @@ const Wrapper = styled.form`
 const ButtonWrapper = styled.div`
   align-self: center;
 `;
+const PreviewImg = styled.img`
+  max-width: 100%;
+`;
+const Text = styled.div`
+  font-size: 14px;
+  line-height: 100%;
+  /* identical to box height, or 14px */
+
+  color: #8b8b8b;
+`;
 
 export default function CrackForm({}) {
   const router = useRouter();
@@ -34,13 +44,22 @@ export default function CrackForm({}) {
     filename: null,
   });
   const [errors, setErrors] = useState<any>();
+  const [previewImg, setPreviewImg] = useState<string>(null);
 
   const handleChange = (e) => {
     if (e.target.name == "file") {
       const file = e.target.files[0];
+
       setFromData({ ...formData, filename: e.target.value, file });
       setErrors(null);
       console.log(e.target.files[0]);
+      if (file) {
+        const pasteImg = URL.createObjectURL(file);
+        console.log(pasteImg);
+        setPreviewImg(pasteImg);
+      } else {
+        setPreviewImg(null);
+      }
     } else {
       setFromData({ ...formData, [e.target.name]: e.target.value });
       setErrors(null);
@@ -64,6 +83,9 @@ export default function CrackForm({}) {
       console.log("paste", file, file.name, formData);
       setFromData({ ...formData, filename: file.name, file });
       setErrors(null);
+      const pasteImg = URL.createObjectURL(file);
+      console.log(pasteImg);
+      setPreviewImg(pasteImg);
     }
   };
   useEffect(() => {
@@ -82,6 +104,9 @@ export default function CrackForm({}) {
         error={errors?.data?.file}
         value={formData?.filename}
       />
+      <Text>游戏内截图后直接粘贴</Text>
+      {previewImg && <PreviewImg src={previewImg} />}
+
       <ButtonWrapper>
         <BlackButton text={"提交识图"} onClick={null} />
       </ButtonWrapper>
