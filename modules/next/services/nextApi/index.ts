@@ -14,6 +14,10 @@ export const getApi = async (
     url.searchParams.set(paramsKeyConvert(key), params[key]);
   }
 
+  if (options) {
+    delete options.headers["Content-Type"];
+  }
+
   return new Promise((resolve, reject) =>
     fetch(url, options)
       .then((resp) =>
@@ -48,6 +52,25 @@ export const postApi = async (path, body = null, cookie = "") => {
       credentials: "same-origin",
       body: body ? JSON.stringify(body) : null,
       headers: { "Content-Type": "application/json", Cookie: cookie },
+    }
+  );
+  return result;
+};
+
+export const postFile = async (path, body = null, cookie = "") => {
+  const formData = new FormData();
+  for (const name in body || {}) {
+    formData.append(name, body[name]);
+  }
+
+  const result = await getApi(
+    path,
+    {},
+    {
+      method: "POST",
+      credentials: "same-origin",
+      body: formData || null,
+      headers: { Cookie: cookie },
     }
   );
   return result;

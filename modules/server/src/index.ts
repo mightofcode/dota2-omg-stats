@@ -6,7 +6,6 @@ import helmet from "koa-helmet";
 import cors from "@koa/cors";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
-
 dotenv.config();
 
 const app = new Koa();

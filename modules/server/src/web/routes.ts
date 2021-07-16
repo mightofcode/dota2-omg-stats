@@ -2,8 +2,12 @@ import Koa, { Context } from "koa";
 import Router = require("koa-router");
 import { dbRun, dbAll, dbGet } from "../utils/db";
 import { getKv } from "../utils/kv";
-
+const mime = require("mime-types");
+const koaBody = require("koa-body")({ multipart: true, uploadDir: "." });
+import fs from "fs";
+const multer = require("@koa/multer");
 const router = new Router();
+const upload = multer();
 
 router.all("/test", async function (ctx: Context) {
   ctx.body = {
@@ -80,6 +84,16 @@ router.all("/stats", async function (ctx: Context) {
     last,
     statsUpdate,
   };
+});
+
+router.all("/crack", upload.single("file"), async function (ctx: Context) {
+  // @ts-ignore
+  const { hero } = ctx.request.body;
+  const body = ctx.request.body;
+  console.log("ctx.file", ctx.file);
+  console.log(body);
+  //
+  ctx.body = {};
 });
 
 const featureRouters = [router];

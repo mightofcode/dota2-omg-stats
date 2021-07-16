@@ -98,7 +98,6 @@ export default function ImgInput({
         disabled={disabled}
         error={errorValue}
         placeholder={placeholder}
-        value={value || ""}
       />
       {errorValue && <ErrorMsg>{errorValue}</ErrorMsg>}
     </Wrapper>
