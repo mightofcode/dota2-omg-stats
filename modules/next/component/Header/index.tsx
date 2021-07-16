@@ -35,6 +35,7 @@ const Title = styled.a`
 `;
 const NavLinkDirect = styled.a`
   cursor: pointer;
+  font-weight: bold;
   :hover {
     text-decoration: underline;
   }
@@ -70,6 +71,7 @@ export default function Header({}) {
         ]}
       />
       <NavLinkDirect href={"/stats"}>统计</NavLinkDirect>
+      <NavLinkDirect href={"/crack"}>识图</NavLinkDirect>
     </Wrapper>
   );
 }

@@ -17,6 +17,7 @@ const Wrapper = styled.div`
 `;
 
 const Text = styled.a`
+  font-weight: bold;
   cursor: pointer;
   :hover {
     text-decoration: underline;
@@ -25,8 +26,12 @@ const Text = styled.a`
   line-height: 100%;
   color: #646c7a;
 `;
-const Icon = styled.img``;
-const LinkWrapper = styled.a``;
+const Icon = styled.img`
+  cursor: pointer;
+  :hover {
+    text-decoration: underline;
+  }
+`;
 
 export default function NavLinkTitle({ text, onClick }) {
   const router = useRouter();
