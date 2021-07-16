@@ -17,6 +17,7 @@ const Wrapper = styled.div`
     margin-left: 5px;
   }
   position: relative;
+  white-space: nowrap;
 `;
 
 export default function NavLink({ text, items }) {

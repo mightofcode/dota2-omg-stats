@@ -42,6 +42,7 @@ const NavLinkDirect = styled.a`
   font-size: 18px;
   line-height: 100%;
   color: #646c7a;
+  white-space: nowrap;
 `;
 
 export default function Header({}) {
