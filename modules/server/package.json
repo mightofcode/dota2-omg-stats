@@ -10,7 +10,8 @@
     "initDb": "sqlite3 dbData/sqlite3.db < sql/schema.sql",
     "deploy-spider": "yarn build && pm2 start ecosystem.config.js --only loveomg-spider",
     "deploy-stats": "yarn build && pm2 start ecosystem.config.js --only loveomg-stats",
-    "deploy-server": "yarn build && pm2 start ecosystem.config.js --only loveomg-server"
+    "deploy-server": "yarn build && pm2 start ecosystem.config.js --only loveomg-server",
+    "uploadImg": "ts-node src/uploadImg.ts"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,7 @@
     "@koa/multer": "^3.0.0",
     "argon2": "^0.27.1",
     "axios": "^0.21.1",
+    "baidu-aip-sdk": "^4.15.4",
     "bignumber.js": "^9.0.1",
     "chalk": "^4.1.0",
     "dayjs": "^1.10.4",
@@ -38,6 +40,7 @@
     "mime-types": "^2.1.31",
     "mongoose": "^5.12.3",
     "parse-kv": "^0.3.1",
+    "sharp": "^0.28.3",
     "socket.io": "^3.1.2",
     "sqlite3": "^5.0.2",
     "validator": "^13.5.2"
