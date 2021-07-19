@@ -1,3 +1,5 @@
+import { createEvalAwarePartialHost } from "ts-node/dist/repl";
+
 const fs = require("fs");
 const path = require("path");
 const util = require("util");
@@ -37,7 +39,10 @@ const getIdFromName = (name: string) => {
   return id;
 };
 
-export const crackOneClip = async (file: string) => {
+export const crackOneClip = async (file?: string) => {
+  if (!file) {
+    return null;
+  }
   const image = fs.readFileSync(file).toString("base64");
   let res = null;
   for (let i = 0; i < 3; i++) {
@@ -63,8 +68,8 @@ const randomString = () => {
   return id;
 };
 
-interface Clip {
-  file: string;
+export interface Clip {
+  file?: string;
   x: number;
   y: number;
   id: number;
@@ -72,14 +77,13 @@ interface Clip {
 
 export const crack = async (file: string) => {
   let index = 0;
-  const clipFile: Clip[] = [];
+  const clipResults: Clip[] = [];
   const dir = randomString();
   fs.mkdirSync(`./tmp/${dir}`, { recursive: true });
-
   for (const clip of clips.clips) {
     console.log("clip", clip.x, clip.y);
     const filePath = `./tmp/${dir}/${index}-${clip.x}-${clip.y}.png`;
-    clipFile.push({
+    clipResults.push({
       file: filePath,
       x: clip.x,
       y: clip.y,
@@ -99,23 +103,56 @@ export const crack = async (file: string) => {
   }
   //
   const promises = [];
-  for (const f of clipFile) {
+  for (const f of clipResults) {
     const f1 = f;
     const task = async () => {
       const id = await crackOneClip(f1.file);
+      f1.file = undefined;
       if (id) {
         f1.id = id;
       }
     };
     promises.push(task());
-    if (promises.length == 3) {
+    if (promises.length == 2) {
       await Promise.all(promises);
       promises.length = 0;
     }
   }
   //
   await Promise.all(promises);
-  console.log(clipFile);
+  console.log(clipResults);
+  return clipResults;
+};
+
+import { dbRun, dbAll, dbGet } from "../utils/db";
+
+export const fillWinrates = async (clips: Clip[]) => {
+  const ids = clips.map((v) => {
+    return v.id;
+  });
+  //
+  let idStr = ids.join(",");
+  const abilities = await dbAll(
+    `select * from ability_winrate where id in (${idStr}) order by winrate`
+  );
+  const abilityCombo = await dbAll(
+    `select * from combo_winrate_synergy order by winrate`
+  );
+  const foundAbilityCombo = [];
+  for (const v of abilityCombo) {
+    if (ids.includes(v.id1) && ids.includes(v.id2)) {
+      foundAbilityCombo.push(v);
+    }
+  }
+  //console.log(abilities);
+  return { clips, combos: foundAbilityCombo, abilities };
+};
+
+export const crackAllProcess = async (file: string) => {
+  const clips = await crack(file);
+  const res = await fillWinrates(clips);
+  console.log(res);
+  return res;
 };
 
 export const uploadFile = async () => {

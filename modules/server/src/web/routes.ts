@@ -5,6 +5,8 @@ import { getKv } from "../utils/kv";
 const mime = require("mime-types");
 const koaBody = require("koa-body")({ multipart: true, uploadDir: "." });
 import fs from "fs";
+import { HttpError } from "../utils/HttpError";
+import { crackAllProcess } from "../crack/crack";
 const multer = require("@koa/multer");
 const router = new Router();
 const upload = multer();
@@ -86,14 +88,31 @@ router.all("/stats", async function (ctx: Context) {
   };
 });
 
+const randomString = () => {
+  const crypto = require("crypto");
+  const id = crypto.randomBytes(10).toString("hex");
+  return id;
+};
+const path = require("path");
 router.all("/crack", upload.single("file"), async function (ctx: Context) {
   // @ts-ignore
-  const { hero } = ctx.request.body;
   const body = ctx.request.body;
+  const filename = ctx?.file?.originalname || "";
   console.log("ctx.file", ctx.file);
-  console.log(body);
+  if (filename.endsWith(".png") || filename.endsWith(".jpg")) {
+    const dir = randomString();
+    fs.mkdirSync(`./tmp/${dir}`);
+    const filePath = `./tmp/${dir}/${filename}`;
+    fs.writeFileSync(filePath, ctx.file.buffer);
+    const res = await crackAllProcess(path.resolve(filePath));
+    console.log("write", filePath);
+    ctx.body = res;
+  } else {
+    throw new HttpError(400, {
+      file: ["png or jpe required"],
+    });
+  }
   //
-  ctx.body = {};
 });
 
 const featureRouters = [router];
