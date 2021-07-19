@@ -1,12 +1,14 @@
 import Koa, { Context } from "koa";
 import Router = require("koa-router");
 import { dbRun, dbAll, dbGet } from "../utils/db";
-import { getKv } from "../utils/kv";
+import { getKv, setKv } from "../utils/kv";
+
 const mime = require("mime-types");
 const koaBody = require("koa-body")({ multipart: true, uploadDir: "." });
 import fs from "fs";
 import { HttpError } from "../utils/HttpError";
 import { crackAllProcess } from "../crack/crack";
+
 const multer = require("@koa/multer");
 const router = new Router();
 const upload = multer();
@@ -107,6 +109,19 @@ router.all("/crack", upload.single("file"), async function (ctx: Context) {
     const res = await crackAllProcess(path.resolve(filePath));
     console.log("write", filePath);
     ctx.body = res;
+
+    const callCount = await getKv("crackCount");
+    console.log(callCount);
+    if (!callCount) {
+      await setKv("crackCount", "0");
+    } else {
+      if (+callCount >= 100) {
+        throw new HttpError(400, {
+          file: ["too many request"],
+        });
+      }
+      await setKv("crackCount", (+callCount + 1).toString());
+    }
   } else {
     throw new HttpError(400, {
       file: ["png or jpe required"],
