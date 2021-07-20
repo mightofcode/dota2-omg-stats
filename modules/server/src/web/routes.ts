@@ -125,7 +125,7 @@ router.all("/crack", upload.single("file"), async function (ctx: Context) {
     await setKv("crackCount", (+callCount + 1).toString());
   }
   const dir = randomString();
-  fs.mkdirSync(`./tmp/${dir}`);
+  fs.mkdirSync(`./tmp/${dir}`, { recursive: true });
   const filePath = `./tmp/${dir}/${filename}`;
   fs.writeFileSync(filePath, ctx.file.buffer);
   const res = await crackAllProcess(path.resolve(filePath));
