@@ -98,14 +98,7 @@ const randomString = () => {
 };
 const path = require("path");
 
-let tmpResult: any = null;
-
 router.all("/crack", upload.single("file"), async function (ctx: Context) {
-  if (tmpResult) {
-    ctx.body = tmpResult;
-    return;
-  }
-
   // @ts-ignore
   const { token } = ctx.request.body;
   const filename = ctx?.file?.originalname || "";
@@ -138,9 +131,6 @@ router.all("/crack", upload.single("file"), async function (ctx: Context) {
   const res = await crackAllProcess(path.resolve(filePath));
   console.log("write", filePath);
   ctx.body = res;
-  tmpResult = res;
-
-  //
 });
 
 const featureRouters = [router];
