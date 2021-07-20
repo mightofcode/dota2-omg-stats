@@ -7,7 +7,7 @@ import Divider from "@/component/util/divider";
 import NavLink from "@/component/Header/NavLink";
 
 const Wrapper = styled.div`
-  height: 50px;
+  height: 80px;
   background-color: #ffffff;
   margin: 0;
   padding: 0;
@@ -18,20 +18,21 @@ const Wrapper = styled.div`
   @media screen and (max-width: 865px) {
   }
   > :not(:first-child) {
-    margin-left: 20px;
   }
 `;
 
 const Title = styled.a`
   font-style: normal;
   font-weight: bold;
-  font-size: 26px;
+  font-size: 30px;
   line-height: 100%;
   color: #2cb3ff;
   :hover {
     text-decoration: none;
     color: #2cb3ff;
   }
+  margin-left: 130px;
+  margin-right: 100px;
 `;
 const NavLinkDirect = styled.a`
   cursor: pointer;
@@ -55,6 +56,7 @@ export default function Header({}) {
       <Divider width={"16px"} />
       <Title href={"/"}>{process.env.NEXT_PUBLIC_SITE_NAME}</Title>
       <NavLinkDirect href={"/"}>首页</NavLinkDirect>
+      <Divider width={"20px"} />
       <NavLink
         text={"技能"}
         items={[
@@ -63,6 +65,7 @@ export default function Header({}) {
           { link: "/synergy", name: "协作" },
         ]}
       />
+      <Divider width={"20px"} />
       <NavLink
         text={"英雄"}
         items={[
@@ -71,7 +74,9 @@ export default function Header({}) {
           { link: "/heroskill/synergy", name: "英雄技能协作" },
         ]}
       />
+      <Divider width={"20px"} />
       <NavLinkDirect href={"/stats"}>统计</NavLinkDirect>
+      <Divider width={"20px"} />
       <NavLinkDirect href={"/crack"}>识图</NavLinkDirect>
     </Wrapper>
   );
