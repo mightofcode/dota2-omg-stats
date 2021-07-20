@@ -30,7 +30,7 @@ export default function SkillWinrate({ abilities }) {
   return (
     <Wrapper>
       {(abilities || []).map((item) => (
-        <SkillWinrateItem ability={item} />
+        <SkillWinrateItem ability={item} key={item.id} />
       ))}
     </Wrapper>
   );

@@ -2,7 +2,7 @@ node_modules
 *.log
 .DS_Store
 .idea
-.env
+modules/server/.env
 dist
 
 modules/server/tmp

@@ -9,6 +9,8 @@ import { postApi, postFile } from "@/services/nextApi";
 import Loading from "@/component/CrackPage/CrackForm/Loading";
 import LoadingDiv from "@/component/CrackPage/CrackForm/LoadingDiv";
 import Divider from "@/component/util/divider";
+import Input from "@/component/form/Input";
+import CrackPreview from "@/component/CrackPage/CrackForm/crackPreview";
 
 const Wrapper = styled.form`
   display: flex;
@@ -28,9 +30,6 @@ const Wrapper = styled.form`
 const ButtonWrapper = styled.div`
   align-self: center;
 `;
-const PreviewImg = styled.img`
-  max-width: 100%;
-`;
 
 const Text = styled.div`
   font-size: 14px;
@@ -46,15 +45,18 @@ export default function CrackForm({ setCrackResult }) {
   const [formData, setFromData] = useState({
     file: null,
     filename: null,
+    token: null,
   });
   const [errors, setErrors] = useState<any>();
   const [loading, setLoading] = useState(false);
+
+  const [result, setResult] = useState<any>(null);
   const [previewImg, setPreviewImg] = useState<string>(null);
 
   const handleChange = (e) => {
     if (e.target.name == "file") {
       const file = e.target.files[0];
-
+      //setResult(null);
       setFromData({ ...formData, filename: e.target.value, file });
       setErrors(null);
       console.log(e.target.files[0]);
@@ -76,11 +78,13 @@ export default function CrackForm({ setCrackResult }) {
     e.preventDefault();
     setLoading(true);
     setCrackResult(null);
+    setResult(null);
     const res = await postFile("/api/crack", formData);
     setLoading(false);
     if (res.result) {
       setErrors(null);
       setCrackResult(res.result);
+      setResult(res.result);
     } else {
       setErrors(res.error);
     }
@@ -106,6 +110,14 @@ export default function CrackForm({ setCrackResult }) {
 
   return (
     <Wrapper onSubmit={onSubmit}>
+      <Input
+        placeholder={"token"}
+        type={"text"}
+        name={"token"}
+        onChange={handleChange}
+        value={formData?.token}
+        error={errors?.data?.token}
+      />
       <ImgInput
         placeholder={"用户名"}
         name={"file"}
@@ -115,7 +127,7 @@ export default function CrackForm({ setCrackResult }) {
       />
       <Text>游戏内截图后直接粘贴</Text>
       <Divider height={"20px"} />
-      {previewImg && <PreviewImg src={previewImg} />}
+      {previewImg && <CrackPreview img={previewImg} crackResult={result} />}
 
       <ButtonWrapper>
         <BlackButton text={"提交识图"} onClick={null} />

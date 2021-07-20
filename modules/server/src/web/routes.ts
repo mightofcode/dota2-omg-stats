@@ -97,37 +97,49 @@ const randomString = () => {
   return id;
 };
 const path = require("path");
+
+let tmpResult: any = null;
+
 router.all("/crack", upload.single("file"), async function (ctx: Context) {
+  if (tmpResult) {
+    ctx.body = tmpResult;
+    return;
+  }
+
   // @ts-ignore
-  const body = ctx.request.body;
+  const { token } = ctx.request.body;
   const filename = ctx?.file?.originalname || "";
   console.log("ctx.file", ctx.file);
-  if (filename.endsWith(".png") || filename.endsWith(".jpg")) {
-    const dir = randomString();
-    fs.mkdirSync(`./tmp/${dir}`);
-    const filePath = `./tmp/${dir}/${filename}`;
-    fs.writeFileSync(filePath, ctx.file.buffer);
-    const res = await crackAllProcess(path.resolve(filePath));
-    console.log("write", filePath);
-    ctx.body = res;
-
-    const callCount = await getKv("crackCount");
-    console.log(callCount);
-    if (!callCount) {
-      await setKv("crackCount", "0");
-    } else {
-      if (+callCount >= 100) {
-        throw new HttpError(400, {
-          file: ["too many request"],
-        });
-      }
-      await setKv("crackCount", (+callCount + 1).toString());
-    }
-  } else {
+  if (!(filename.endsWith(".png") || filename.endsWith(".jpg"))) {
     throw new HttpError(400, {
       file: ["png or jpg required"],
     });
   }
+  //
+  let callCount = await getKv("crackCount");
+  console.log(callCount);
+  if (!callCount) {
+    await setKv("crackCount", "0");
+    callCount = await getKv("crackCount");
+  }
+  if (token != process.env.CRACK_TOKEN) {
+    //每日仅限十次调用
+    if (+callCount >= 1) {
+      throw new HttpError(400, {
+        file: ["每日仅限十次调用"],
+      });
+    }
+    await setKv("crackCount", (+callCount + 1).toString());
+  }
+  const dir = randomString();
+  fs.mkdirSync(`./tmp/${dir}`);
+  const filePath = `./tmp/${dir}/${filename}`;
+  fs.writeFileSync(filePath, ctx.file.buffer);
+  const res = await crackAllProcess(path.resolve(filePath));
+  console.log("write", filePath);
+  ctx.body = res;
+  tmpResult = res;
+
   //
 });
 
