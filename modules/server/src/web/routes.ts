@@ -117,7 +117,7 @@ router.all("/crack", upload.single("file"), async function (ctx: Context) {
   }
   if (token != process.env.CRACK_TOKEN) {
     //每日仅限十次调用
-    if (+callCount >= 1) {
+    if (+callCount >= 10) {
       throw new HttpError(400, {
         file: ["每日仅限十次调用"],
       });
