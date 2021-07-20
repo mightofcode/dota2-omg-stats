@@ -30,13 +30,13 @@ const Item2 = styled.div`
   color: #484848;
 `;
 
-export default function SkillWinrateItemCol3({}) {
+export default function SkillWinrateItemCol3({ winrate, synergy }) {
   const router = useRouter();
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <Item1>0.50</Item1>
-      <Item2>+0.01</Item2>
+      <Item1>{(winrate || 0.0).toFixed(2)}</Item1>
+      <Item2>+{(synergy || 0.0).toFixed(2)}</Item2>
     </Wrapper>
   );
 }

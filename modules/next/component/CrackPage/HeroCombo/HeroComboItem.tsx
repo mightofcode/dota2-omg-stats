@@ -23,14 +23,14 @@ const Wrapper = styled.div`
 
 const Item = styled.div``;
 
-export default function HeroComboItem({}) {
+export default function HeroComboItem({ combo }) {
   const router = useRouter();
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <HeroWinrateItemCol />
-      <SkillWinrateItemCol1 />
-      <SkillWinrateItemCol3 />
+      <HeroWinrateItemCol id={combo?.id1} winrate={combo?.id1} />
+      <SkillWinrateItemCol1 id={combo?.id2} winrate={combo?.id2} />
+      <SkillWinrateItemCol3 winrate={combo?.winrate} synergy={combo.synergy} />
     </Wrapper>
   );
 }

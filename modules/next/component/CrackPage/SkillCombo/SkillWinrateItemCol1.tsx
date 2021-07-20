@@ -29,13 +29,13 @@ const Text = styled.div`
 
   color: #484848;
 `;
-export default function SkillWinrateItemCol1({}) {
+export default function SkillWinrateItemCol1({ id, winrate }) {
   const router = useRouter();
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <SkillIcon src={`/ability/5651.png`} />
-      <Text>0.50</Text>
+      <SkillIcon src={`/ability/${id}.png`} />
+      <Text>{(winrate || 0.0).toFixed(2)}</Text>
     </Wrapper>
   );
 }

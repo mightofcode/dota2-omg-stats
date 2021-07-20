@@ -6,6 +6,9 @@ import * as React from "react";
 import ImgInput from "@/component/form/ImgInput";
 import BlackButton from "@/component/buttons/BlackButton";
 import { postApi, postFile } from "@/services/nextApi";
+import Loading from "@/component/CrackPage/CrackForm/Loading";
+import LoadingDiv from "@/component/CrackPage/CrackForm/LoadingDiv";
+import Divider from "@/component/util/divider";
 
 const Wrapper = styled.form`
   display: flex;
@@ -28,6 +31,7 @@ const ButtonWrapper = styled.div`
 const PreviewImg = styled.img`
   max-width: 100%;
 `;
+
 const Text = styled.div`
   font-size: 14px;
   line-height: 100%;
@@ -36,7 +40,7 @@ const Text = styled.div`
   color: #8b8b8b;
 `;
 
-export default function CrackForm({}) {
+export default function CrackForm({ setCrackResult }) {
   const router = useRouter();
 
   const [formData, setFromData] = useState({
@@ -44,6 +48,7 @@ export default function CrackForm({}) {
     filename: null,
   });
   const [errors, setErrors] = useState<any>();
+  const [loading, setLoading] = useState(false);
   const [previewImg, setPreviewImg] = useState<string>(null);
 
   const handleChange = (e) => {
@@ -69,9 +74,13 @@ export default function CrackForm({}) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setCrackResult(null);
     const res = await postFile("/api/crack", formData);
+    setLoading(false);
     if (res.result) {
       setErrors(null);
+      setCrackResult(res.result);
     } else {
       setErrors(res.error);
     }
@@ -105,11 +114,14 @@ export default function CrackForm({}) {
         value={formData?.filename}
       />
       <Text>游戏内截图后直接粘贴</Text>
+      <Divider height={"20px"} />
       {previewImg && <PreviewImg src={previewImg} />}
 
       <ButtonWrapper>
         <BlackButton text={"提交识图"} onClick={null} />
       </ButtonWrapper>
+
+      {loading && <LoadingDiv />}
     </Wrapper>
   );
 }

@@ -8,6 +8,7 @@ const koaBody = require("koa-body")({ multipart: true, uploadDir: "." });
 import fs from "fs";
 import { HttpError } from "../utils/HttpError";
 import { crackAllProcess } from "../crack/crack";
+import { sleep } from "../utils/utils";
 
 const multer = require("@koa/multer");
 const router = new Router();
@@ -124,7 +125,7 @@ router.all("/crack", upload.single("file"), async function (ctx: Context) {
     }
   } else {
     throw new HttpError(400, {
-      file: ["png or jpe required"],
+      file: ["png or jpg required"],
     });
   }
   //

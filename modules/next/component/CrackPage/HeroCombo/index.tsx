@@ -22,14 +22,15 @@ const Wrapper = styled.div`
 
 const Item = styled.div``;
 
-export default function HeroCombo({}) {
+export default function HeroCombo({ heroCombos }) {
   const router = useRouter();
   useEffect(() => {}, []);
+
   return (
     <Wrapper>
-      <HeroComboItem />
-      <HeroComboItem />
-      <HeroComboItem />
+      {(heroCombos || []).map((item) => (
+        <HeroComboItem combo={item} />
+      ))}
     </Wrapper>
   );
 }

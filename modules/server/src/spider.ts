@@ -9,6 +9,7 @@ const util = require("util");
 dotenv.config();
 
 import { dbRun, dbAll, dbGet } from "./utils/db";
+import { sleep } from "./utils/utils";
 
 console.log("start spider");
 
@@ -43,12 +44,6 @@ const httpGet = async (url: string) => {
     data: {},
   });
   return response?.data;
-};
-
-export const sleep = (time: any) => {
-  return new Promise((resolve) => {
-    setTimeout(resolve, time);
-  });
 };
 
 const saveMatch = async (match: any) => {

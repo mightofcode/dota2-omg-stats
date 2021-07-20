@@ -45,9 +45,15 @@ export const crackOneClip = async (file?: string) => {
   }
   const image = fs.readFileSync(file).toString("base64");
   let res = null;
-  for (let i = 0; i < 3; i++) {
-    res = await client.similarSearch(image, {});
-    if (res) {
+
+  for (let i = 0; i < 100; i++) {
+    try {
+      res = await client.similarSearch(image, { pn: 0, rn: 1 });
+    } catch (e) {
+      console.log("req error");
+      break;
+    }
+    if (res?.result && res?.result.length > 0) {
       break;
     }
   }
@@ -133,10 +139,10 @@ export const fillWinrates = async (clips: Clip[]) => {
   //
   let idStr = ids.join(",");
   const abilities = await dbAll(
-    `select * from ability_winrate where id in (${idStr}) order by winrate`
+    `select * from ability_winrate where id in (${idStr}) order by winrate desc`
   );
   const abilityCombo = await dbAll(
-    `select * from combo_winrate_synergy order by winrate`
+    `select * from combo_winrate_synergy order by winrate desc`
   );
   const foundAbilityCombo = [];
   for (const v of abilityCombo) {

@@ -30,13 +30,13 @@ const SkillIcon = styled.img`
   width: 64px;
 `;
 
-export default function SkillWinrateItem({}) {
+export default function SkillWinrateItem({ ability }) {
   const router = useRouter();
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <SkillIcon src={`/ability/5651.png`} />
-      <Text>0.50</Text>
+      <SkillIcon src={`/ability/${ability?.id}.png`} />
+      <Text>{(ability?.winrate || 0.0).toFixed(2)}</Text>
     </Wrapper>
   );
 }

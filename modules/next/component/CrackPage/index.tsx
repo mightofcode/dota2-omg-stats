@@ -7,6 +7,7 @@ import SkillWinrate from "@/component/CrackPage/SkillWinrate";
 import SkillCombo from "@/component/CrackPage/SkillCombo";
 import HeroCombo from "@/component/CrackPage/HeroCombo";
 import CrackForm from "@/component/CrackPage/CrackForm";
+import Divider from "@/component/util/divider";
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -36,6 +37,8 @@ const SubTitle = styled.div`
   white-space: nowrap;
 `;
 
+const ResultWrapper = styled.div``;
+
 export default function CrackPage({}) {
   const router = useRouter();
 
@@ -43,16 +46,38 @@ export default function CrackPage({}) {
     //console.log(winrates);
   }, []);
 
+  const [crackResult, setCrackResult] = useState<any>(null);
+  //
+
+  const setResult = (d) => {
+    console.log(d);
+    setCrackResult(d);
+  };
+
   return (
     <Wrapper>
       <Title>识图</Title>
-      <CrackForm />
-      <SubTitle>技能胜率</SubTitle>
-      <SkillWinrate />
-      <SubTitle>技能协作</SubTitle>
-      <SkillCombo />
-      <SubTitle>英雄技能协作</SubTitle>
-      <HeroCombo />
+      <Divider height={"30px"} />
+      <CrackForm setCrackResult={setResult} />
+
+      {crackResult && (
+        <ResultWrapper>
+          <SubTitle>技能胜率</SubTitle>
+          <Divider height={"10px"} />
+          <SkillWinrate abilities={crackResult?.abilities} />
+
+          <Divider height={"30px"} />
+
+          <SubTitle>技能协作</SubTitle>
+          <Divider height={"10px"} />
+          <SkillCombo combos={crackResult?.combos} />
+          <Divider height={"30px"} />
+          <SubTitle>英雄技能协作</SubTitle>
+          <Divider height={"10px"} />
+          <HeroCombo heroCombos={crackResult?.heroCombos} />
+          <Divider height={"30px"} />
+        </ResultWrapper>
+      )}
     </Wrapper>
   );
 }

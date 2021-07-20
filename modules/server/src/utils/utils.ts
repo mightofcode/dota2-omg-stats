@@ -21,3 +21,9 @@ export const download_image = (url: string, image_path: string) => {
       })
   );
 };
+
+export const sleep = (time: any) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, time);
+  });
+};

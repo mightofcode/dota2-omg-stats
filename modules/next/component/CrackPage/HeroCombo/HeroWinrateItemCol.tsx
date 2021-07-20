@@ -31,14 +31,14 @@ const Text = styled.div`
 
   color: #484848;
 `;
-export default function HeroWinrateItemCol({}) {
+export default function HeroWinrateItemCol({ id, winrate }) {
   const router = useRouter();
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <HeroIcon src={`/hero/111.png`} />
+      <HeroIcon src={`/hero/${id}.png`} />
       <Divider height={"19px"} />
-      <Text>0.50</Text>
+      <Text>{(winrate || 0).toFixed(2)}</Text>
     </Wrapper>
   );
 }

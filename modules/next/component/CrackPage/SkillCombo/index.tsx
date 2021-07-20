@@ -22,14 +22,14 @@ const Wrapper = styled.div`
 
 const Item = styled.div``;
 
-export default function SkillCombo({}) {
+export default function SkillCombo({ combos }) {
   const router = useRouter();
   useEffect(() => {}, []);
   return (
     <Wrapper>
-      <SkillComboItem />
-      <SkillComboItem />
-      <SkillComboItem />
+      {(combos || []).map((item) => (
+        <SkillComboItem key={item?.id1 + " " + item?.id2} combo={item} />
+      ))}
     </Wrapper>
   );
 }

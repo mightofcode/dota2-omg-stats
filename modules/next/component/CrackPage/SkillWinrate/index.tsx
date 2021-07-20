@@ -23,14 +23,15 @@ const Wrapper = styled.div`
   }
 `;
 
-export default function SkillWinrate({}) {
+export default function SkillWinrate({ abilities }) {
   const router = useRouter();
   useEffect(() => {}, []);
+
   return (
     <Wrapper>
-      <SkillWinrateItem />
-      <SkillWinrateItem />
-      <SkillWinrateItem />
+      {(abilities || []).map((item) => (
+        <SkillWinrateItem ability={item} />
+      ))}
     </Wrapper>
   );
 }
