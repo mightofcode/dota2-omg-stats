@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "loveomg-server",
-      script: "dist/index.js",
+      script: "dist/src/index.js",
       args: "",
       log_date_format: "YYYY-MM-DD HH:mm Z",
       env: {
@@ -14,7 +14,7 @@ module.exports = {
     },
     {
       name: "loveomg-spider",
-      script: "dist/spider.js",
+      script: "dist/src/spider.js",
       args: "",
       log_date_format: "YYYY-MM-DD HH:mm Z",
       env: {
@@ -26,7 +26,7 @@ module.exports = {
     },
     {
       name: "loveomg-stats",
-      script: "dist/stats.js",
+      script: "dist/src/stats.js",
       args: "",
       autorestart: false,
       cron_restart: "0 * * * *",
