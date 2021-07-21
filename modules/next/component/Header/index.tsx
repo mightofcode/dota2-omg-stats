@@ -75,8 +75,6 @@ export default function Header({}) {
         ]}
       />
       <Divider width={"20px"} />
-      <NavLinkDirect href={"/stats"}>统计</NavLinkDirect>
-      <Divider width={"20px"} />
       <NavLinkDirect href={"/crack"}>识图</NavLinkDirect>
     </Wrapper>
   );

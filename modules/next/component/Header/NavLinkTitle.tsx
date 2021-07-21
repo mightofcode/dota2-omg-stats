@@ -31,6 +31,7 @@ const Icon = styled.img`
   :hover {
     text-decoration: underline;
   }
+  width: 11px;
 `;
 
 export default function NavLinkTitle({ text, onClick }) {
