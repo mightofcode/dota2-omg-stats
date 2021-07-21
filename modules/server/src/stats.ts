@@ -9,6 +9,7 @@ import { dbRun, dbAll, dbGet } from "./utils/db";
 import { setKv } from "./utils/kv";
 import { loadDota2Kv } from "./utils/dota2kv";
 import { download_image } from "./utils/utils";
+import dayjs = require("dayjs");
 
 var fs = require("fs");
 const util = require("util");
@@ -547,7 +548,22 @@ const saveHeroSkillSynergy = async () => {
   }
 };
 
+const deleteOldMatch = async () => {
+  const fromDate = dayjs().subtract(15, "d");
+  const startTime = Math.floor(fromDate.toDate().getTime() / 1000);
+  console.log(startTime);
+  const c = await dbGet(
+    `select count(*) as count from match where match_time<${startTime}`
+  );
+  console.log("old match", c);
+  if (process.env.DELETE_OLD_MATCH == "true") {
+    console.log("delete old match");
+    await dbRun(`delete from match where match_time<${startTime}`);
+  }
+};
+
 const main = async () => {
+  await deleteOldMatch();
   collectHeroMetaInfo();
   collectAbilityMetaInfo();
   collectSkillCombo();
