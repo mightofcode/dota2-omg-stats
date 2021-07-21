@@ -82,6 +82,14 @@ const getRanged = (s: string) => {
 const getSynergy = (winrate: number, winrate1: number, winrate2: number) => {
   return winrate - (winrate1 + winrate2) / 2;
 };
+
+const isAbilityName = (skillId: string) => {
+  return (
+    skillId &&
+    !skillId.startsWith("special_bonus") &&
+    skillId != "generic_hidden"
+  );
+};
 const collectHeroMetaInfo = () => {
   console.log("collectMetaInfo");
   //
@@ -100,11 +108,7 @@ const collectHeroMetaInfo = () => {
       for (let i = 0; i < 20; i++) {
         const skillId = v["Ability" + (i + 1)];
 
-        if (
-          skillId &&
-          !skillId.startsWith("special_bonus") &&
-          skillId != "generic_hidden"
-        ) {
+        if (isAbilityName(skillId)) {
           abilityList.push(skillId);
           activeAbilityMap[skillId] = true;
         }
@@ -163,6 +167,7 @@ const collectAbilityMetaInfo = () => {
       Object.keys(skillComboMap).length
     }`
   );
+  //
 };
 
 const collectSkillCombo = () => {
@@ -238,8 +243,34 @@ const isRadiant = (slot: number) => {
   return slot < 128;
 };
 
-const handleMatch = async (match: any) => {
+const preHandle = (match: any) => {
+  const adIdMap: any = {
+    7836: 5376,
+    7837: 5381,
+    7838: 5382,
+    7839: 5383,
+    7840: 5384,
+    7843: 5385,
+    7841: 5386,
+    7842: 5387,
+    7844: 5389,
+    7845: 5390,
+  };
   const matchData = JSON.parse(match.data);
+  const players = matchData.players || [];
+  players.forEach((v: any) => {
+    const abilityUpgrade = v.ability_upgrades || [];
+    abilityUpgrade.forEach((a: any) => {
+      if (adIdMap[a.ability]) {
+        a.ability = adIdMap[a.ability];
+      }
+    });
+  });
+  matchData.players = players;
+  return matchData;
+};
+
+const handleMatch = async (matchData: any) => {
   const radiant_win = matchData.radiant_win == 1;
   const players = matchData.players || [];
   const heros: any = {};
@@ -287,8 +318,7 @@ const handleMatch = async (match: any) => {
   }
 };
 
-const handleCombo = async (match: any) => {
-  const matchData = JSON.parse(match.data);
+const handleCombo = async (matchData: any) => {
   const radiant_win = matchData.radiant_win == 1;
   const players = matchData.players || [];
   //
@@ -327,8 +357,7 @@ const handleCombo = async (match: any) => {
   });
 };
 
-const handleHeroSkillCombo = async (match: any) => {
-  const matchData = JSON.parse(match.data);
+const handleHeroSkillCombo = async (matchData: any) => {
   const radiant_win = matchData.radiant_win == 1;
   const players = matchData.players || [];
   //
@@ -374,9 +403,11 @@ const parseMatch = async () => {
       break;
     }
     matchs.forEach((v: any) => {
-      handleMatch(v);
-      handleCombo(v);
-      handleHeroSkillCombo(v);
+      const matchParsed = preHandle(v);
+
+      handleMatch(matchParsed);
+      handleCombo(matchParsed);
+      handleHeroSkillCombo(matchParsed);
     });
     lastId = matchs[matchs.length - 1].match_id + 1;
   }
