@@ -101,7 +101,7 @@ const path = require("path");
 let tmpResult: any = null;
 
 router.all("/crack", upload.single("file"), async function (ctx: Context) {
-  if (tmpResult && true) {
+  if (tmpResult && false) {
     ctx.body = tmpResult;
     return;
   }

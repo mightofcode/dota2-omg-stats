@@ -22,7 +22,7 @@ const imgBlackList = [
   5592, 5617, 5610, 5624, 5627, 5628, 5648, 5644, 5645, 5646, 5649, 5666, 5672,
   5673, 5719, 5724, 6325, 6459, 7116, 6937, 7231, 7318, 7319, 7852, 7850, 7851,
   7903, 8027, 8028, 8029, 8030, 8106, 8107, 8159, 9627, 6486, 5722, 5635, 5528,
-  5424, 5449, 7853,
+  5424, 5449, 7853, 5349,
 ];
 
 const similarAdd = util.promisify(client.similarAdd.bind(client));
@@ -62,7 +62,7 @@ export const crackOneClip = async (file?: string) => {
     brief = res?.result[0]?.brief;
   }
   const id = getIdFromName(brief);
-  console.log("crackOneClip", file, id);
+  console.log("crackOneClip", file, res, id);
   return id;
 };
 
