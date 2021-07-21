@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import CrackDiv from "@/component/CrackPage/CrackForm/crackPreview/crackDiv";
+import ComboBlock from "@/component/CrackPage/CrackForm/crackPreview/ComboBlock";
 
 const Wrapper = styled.div`
   display: flex;
@@ -34,6 +35,7 @@ export default function CrackPreview({ img, crackResult }) {
     <Wrapper>
       <PreviewImg src={img} />
       <CrackDiv cracks={crackResult} />
+      <ComboBlock cracks={crackResult} />
     </Wrapper>
   );
 }

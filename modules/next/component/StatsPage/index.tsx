@@ -61,7 +61,7 @@ export default function StatsPage({ stats }) {
         </TextLight>
       </Item>
       <Item>
-        本站统计最近<TextBold>十天</TextBold>的数据
+        本站统计最近<TextBold>十五天</TextBold>的数据
       </Item>
       <Item>
         最近更新时间：
