@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --watch \"src/**/*\" -e \"js,ts\" --exec \"ts-node src/index.ts\"",
-    "build": "tsc && yarn copy",
+    "build": "yarn install && tsc && yarn copy",
     "copy": "ls",
     "initDb": "sqlite3 dbData/sqlite3.db < sql/schema.sql",
     "deploy-spider": "yarn build && pm2 start ecosystem.config.js --only loveomg-spider",
     "deploy-stats": "yarn build && pm2 start ecosystem.config.js --only loveomg-stats",
     "deploy-server": "yarn build && pm2 start ecosystem.config.js --only loveomg-server",
+    "deploy-daily": "yarn build && pm2 start ecosystem.config.js --only loveomg-daily",
     "uploadImg": "ts-node src/uploadImg.ts"
   },
   "author": "",
