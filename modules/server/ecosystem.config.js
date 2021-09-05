@@ -28,7 +28,7 @@ module.exports = {
       name: "loveomg-stats",
       script: "dist/src/stats.js",
       args: "",
-      autorestart: false,
+      autorestart: true,
       cron_restart: "0 * * * *",
       log_date_format: "YYYY-MM-DD HH:mm Z",
       env: {

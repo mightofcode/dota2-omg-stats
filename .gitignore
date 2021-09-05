@@ -8,3 +8,4 @@ dist
 modules/server/tmp
 sqlite3.db
 .env
+dbData

@@ -8,7 +8,7 @@ import axios from "axios";
 import { dbRun, dbAll, dbGet } from "./utils/db";
 import { setKv } from "./utils/kv";
 import { loadDota2Kv } from "./utils/dota2kv";
-import { download_image } from "./utils/utils";
+import { download_image,sleep } from "./utils/utils";
 import dayjs = require("dayjs");
 
 var fs = require("fs");
@@ -607,5 +607,6 @@ const main = async () => {
   await saveHeroSkillCombo();
   await saveHeroSkillSynergy();
   await setKv("statsUpdate", Date.now().toString());
+  await sleep(1000*3600*24);
 };
 main();
