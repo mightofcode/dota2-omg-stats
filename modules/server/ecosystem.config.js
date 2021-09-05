@@ -17,6 +17,7 @@ module.exports = {
       script: "dist/src/spider.js",
       args: "",
       log_date_format: "YYYY-MM-DD HH:mm Z",
+      cron_restart: "0 4 * * *",
       env: {
         NODE_ENV: "development",
       },
@@ -29,7 +30,7 @@ module.exports = {
       script: "dist/src/stats.js",
       args: "",
       autorestart: true,
-      cron_restart: "0 * * * *",
+      cron_restart: "0 4 * * *",
       log_date_format: "YYYY-MM-DD HH:mm Z",
       env: {
         NODE_ENV: "development",
