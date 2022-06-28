@@ -1,4 +1,5 @@
-﻿"lang"
+﻿// Dota Heroes File
+"lang"
 { 
 	"Language" "schinese" 
 	"Tokens" 
